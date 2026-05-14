@@ -19,8 +19,8 @@ def render_umap_map() -> None:
         return
 
     # Cheap embeddings: TF-IDF on title+abstract, then UMAP. Avoids any LLM call.
-    from sklearn.feature_extraction.text import TfidfVectorizer
     import umap
+    from sklearn.feature_extraction.text import TfidfVectorizer
 
     text = [
         f"{r.get('title') or ''} {(r.get('abstract') or '')[:2000]}"

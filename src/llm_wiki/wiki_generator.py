@@ -2,10 +2,10 @@
 from __future__ import annotations
 
 import logging
-import yaml
 from typing import Any
 
 import polars as pl
+import yaml
 
 from .config import PATHS
 from .llm_client import LLMClient

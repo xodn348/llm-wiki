@@ -20,7 +20,7 @@ def test_doi_slug_filename_safe() -> None:
 
 
 def test_polars_roundtrip(tmp_path) -> None:
-    from llm_wiki.storage import write_parquet, read_parquet, upsert_parquet
+    from llm_wiki.storage import read_parquet, upsert_parquet, write_parquet
 
     df = pl.DataFrame({"doi": ["a", "b"], "x": [1, 2]})
     p = tmp_path / "x.parquet"

@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import logging
-from typing import Optional
 
 import typer
 from rich.logging import RichHandler
@@ -39,7 +38,7 @@ def root(verbose: bool = typer.Option(False, "--verbose", "-v")) -> None:
 
 
 @app.command()
-def seed(only: Optional[str] = typer.Option(None, "--only", help="comma-separated source names")) -> None:
+def seed(only: str | None = typer.Option(None, "--only", help="comma-separated source names")) -> None:
     """1. Assemble candidates from authoritative sources."""
     sources = [s.strip() for s in only.split(",")] if only else None
     seed_assembler.assemble(source_names=sources)
@@ -48,7 +47,7 @@ def seed(only: Optional[str] = typer.Option(None, "--only", help="comma-separate
 @app.command(name="filter")
 def filter_(
     batch: int = 25,
-    limit: Optional[int] = None,
+    limit: int | None = None,
     heuristic: bool = typer.Option(False, help="Skip LLM; use citation-floor heuristic"),
     citation_floor: int = 5000,
 ) -> None:
@@ -90,13 +89,13 @@ def graph() -> None:
 
 
 @app.command()
-def label(batch: int = 20, max_edges: Optional[int] = None) -> None:
+def label(batch: int = 20, max_edges: int | None = None) -> None:
     """8. LLM 'why related' labels."""
     edge_labeler.label_all(batch=batch, max_edges=max_edges)
 
 
 @app.command()
-def wiki(max_papers: Optional[int] = None, no_llm: bool = False) -> None:
+def wiki(max_papers: int | None = None, no_llm: bool = False) -> None:
     """9. Generate wiki markdown pages."""
     wiki_generator.generate(max_papers=max_papers, with_llm=not no_llm)
 
