@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+.uv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Data — large, regenerable from sources
+data/raw/papers/
+data/raw/seed/
+data/vectors/
+data.duckdb
+data.duckdb.wal
+
+# Generated wiki content (regenerated on each run; only spec lives in git)
+docs/paper/
+docs/topic/
+docs/lineage/
+docs/viz/
+
+# MkDocs
+site/
+
+# OS
+.DS_Store
+
+# Secrets
+.env
+.env.local

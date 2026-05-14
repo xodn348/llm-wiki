@@ -1,0 +1,120 @@
+"""CLI: ``llm-wiki <stage>``. Each stage is independently runnable."""
+from __future__ import annotations
+
+import logging
+from typing import Optional
+
+import typer
+from rich.logging import RichHandler
+
+from . import (
+    chunker,
+    concept_tagger,
+    edge_labeler,
+    graph_builder,
+    metadata_enricher,
+    paper_fetcher,
+    seed_assembler,
+    tier_filter,
+    viz_renderer,
+    wiki_generator,
+)
+
+app = typer.Typer(help="llm-wiki: pipeline for Fleming-tier paper wiki")
+
+
+def _setup_logging(verbose: bool) -> None:
+    level = logging.DEBUG if verbose else logging.INFO
+    logging.basicConfig(
+        level=level,
+        format="%(message)s",
+        datefmt="%H:%M:%S",
+        handlers=[RichHandler(rich_tracebacks=True, markup=False, show_path=False)],
+    )
+
+
+@app.callback()
+def root(verbose: bool = typer.Option(False, "--verbose", "-v")) -> None:
+    _setup_logging(verbose)
+
+
+@app.command()
+def seed(only: Optional[str] = typer.Option(None, "--only", help="comma-separated source names")) -> None:
+    """1. Assemble candidates from authoritative sources."""
+    sources = [s.strip() for s in only.split(",")] if only else None
+    seed_assembler.assemble(source_names=sources)
+
+
+@app.command(name="filter")
+def filter_(batch: int = 25, limit: Optional[int] = None) -> None:
+    """2. LLM tier filter → core."""
+    tier_filter.filter_candidates(batch_size=batch, limit=limit)
+
+
+@app.command()
+def enrich() -> None:
+    """3. OpenAlex metadata for core."""
+    metadata_enricher.enrich()
+
+
+@app.command()
+def fetch() -> None:
+    """4. Download paper PDFs (open-access first)."""
+    paper_fetcher.fetch()
+
+
+@app.command()
+def chunk() -> None:
+    """5. Build PageIndex semantic trees."""
+    chunker.chunk_all()
+
+
+@app.command()
+def tag() -> None:
+    """6. Concept tagging from OpenAlex Concepts."""
+    concept_tagger.tag_all()
+
+
+@app.command()
+def graph() -> None:
+    """7. Build cross-paper graph."""
+    graph_builder.build()
+
+
+@app.command()
+def label(batch: int = 20, max_edges: Optional[int] = None) -> None:
+    """8. LLM 'why related' labels."""
+    edge_labeler.label_all(batch=batch, max_edges=max_edges)
+
+
+@app.command()
+def wiki(max_papers: Optional[int] = None, no_llm: bool = False) -> None:
+    """9. Generate wiki markdown pages."""
+    wiki_generator.generate(max_papers=max_papers, with_llm=not no_llm)
+
+
+@app.command()
+def viz() -> None:
+    """10. UMAP map + Cytoscape graph."""
+    viz_renderer.render_all()
+
+
+@app.command()
+def all_(skip_llm: bool = False) -> None:  # noqa: PLR0913
+    """Run the entire pipeline."""
+    seed_assembler.assemble()
+    if not skip_llm:
+        tier_filter.filter_candidates()
+    metadata_enricher.enrich()
+    paper_fetcher.fetch()
+    chunker.chunk_all()
+    concept_tagger.tag_all()
+    graph_builder.build()
+    if not skip_llm:
+        edge_labeler.label_all()
+    wiki_generator.generate(with_llm=not skip_llm)
+    viz_renderer.render_all()
+
+
+if __name__ == "__main__":
+    app()

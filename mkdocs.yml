@@ -1,0 +1,57 @@
+site_name: llm-wiki
+site_description: LLM-maintained wiki of paradigm-shifting (Fleming-tier) scientific papers
+site_url: https://xodn348.github.io/llm-wiki/
+repo_url: https://github.com/xodn348/llm-wiki
+repo_name: xodn348/llm-wiki
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - footnotes
+  - toc:
+      permalink: true
+  - tables
+  - attr_list
+  - md_in_html
+
+plugins:
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/xodn348/llm-wiki
+
+nav:
+  - Home: index.md
+  - Spec: superpowers/specs/2026-05-14-llm-wiki-design.md
