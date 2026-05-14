@@ -36,8 +36,10 @@ def build() -> pl.DataFrame:
     metadata = read_parquet(PATHS.metadata)
     nodes = read_parquet(PATHS.nodes)
     tags = read_parquet(PATHS.graph / "tags.parquet")
-    if metadata.is_empty() or nodes.is_empty():
-        raise RuntimeError("Need metadata and nodes. Run earlier stages first.")
+    if metadata.is_empty():
+        raise RuntimeError("No metadata. Run `llm-wiki enrich` first.")
+    if nodes.is_empty():
+        logger.warning("no nodes — building paper-level graph only (skipping same-method edges)")
 
     edges: list[dict[str, Any]] = []
     oa_to_doi = _doi_from_openalex_id(metadata)

@@ -18,11 +18,9 @@ data/vectors/
 data.duckdb
 data.duckdb.wal
 
-# Generated wiki content (regenerated on each run; only spec lives in git)
-docs/paper/
-docs/topic/
-docs/lineage/
-docs/viz/
+# Note: generated wiki content (docs/paper, docs/viz, etc.) IS committed
+# so GitHub Pages can deploy it without running the LLM pipeline in CI.
+# Re-run `llm-wiki all` locally to refresh.
 
 # MkDocs
 site/

@@ -42,6 +42,34 @@ def _batch_prompt(batch: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def filter_heuristic(*, citation_floor: int = 5000, drop_no_doi: bool = True) -> pl.DataFrame:
+    """LLM-free fallback. Accept curated-list rows + high-cite OpenAlex rows."""
+    candidates = read_parquet(PATHS.candidates)
+    if candidates.is_empty():
+        raise RuntimeError("No candidates. Run `llm-wiki seed` first.")
+    df = candidates
+    # awesome_ml is hand-curated → always keep
+    curated = df.filter(pl.col("source_tag").str.contains("awesome_ml"))
+    # OpenAlex rows passing the citation floor
+    if "citations" in df.columns:
+        oa = df.filter(
+            pl.col("source_tag").str.contains("openalex")
+            & (pl.col("citations").fill_null(0) >= citation_floor)
+        )
+    else:
+        oa = pl.DataFrame()
+    out = pl.concat([curated, oa], how="diagonal_relaxed").unique(subset=["doi"])
+    if drop_no_doi:
+        out = out.filter(pl.col("doi").is_not_null())
+    out = out.with_columns(
+        pl.lit("fleming").alias("tier"),
+        pl.lit("heuristic: curated-list OR OpenAlex citations >= floor").alias("reason"),
+    )
+    write_parquet(out, PATHS.core)
+    logger.info("heuristic filter: %d papers accepted (no LLM)", len(out))
+    return out
+
+
 def filter_candidates(*, batch_size: int = 25, limit: int | None = None) -> pl.DataFrame:
     candidates = read_parquet(PATHS.candidates)
     if candidates.is_empty():

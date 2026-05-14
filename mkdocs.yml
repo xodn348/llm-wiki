@@ -54,4 +54,14 @@ extra:
 
 nav:
   - Home: index.md
+  - UMAP map: viz/map.html
+  - Chunk graph: viz/graph.html
   - Spec: superpowers/specs/2026-05-14-llm-wiki-design.md
+  - Papers: paper/index.md
+
+docs_dir: docs
+
+not_in_nav: |
+  paper/*.md
+  !paper/index.md
+

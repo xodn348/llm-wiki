@@ -46,9 +46,17 @@ def seed(only: Optional[str] = typer.Option(None, "--only", help="comma-separate
 
 
 @app.command(name="filter")
-def filter_(batch: int = 25, limit: Optional[int] = None) -> None:
-    """2. LLM tier filter → core."""
-    tier_filter.filter_candidates(batch_size=batch, limit=limit)
+def filter_(
+    batch: int = 25,
+    limit: Optional[int] = None,
+    heuristic: bool = typer.Option(False, help="Skip LLM; use citation-floor heuristic"),
+    citation_floor: int = 5000,
+) -> None:
+    """2. LLM tier filter → core. Use --heuristic when LLM unavailable."""
+    if heuristic:
+        tier_filter.filter_heuristic(citation_floor=citation_floor)
+    else:
+        tier_filter.filter_candidates(batch_size=batch, limit=limit)
 
 
 @app.command()
