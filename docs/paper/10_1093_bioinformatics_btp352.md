@@ -25,12 +25,20 @@ concepts:
 
 ## Why this mattered
 
-_TBD_
+Before SAM, high-throughput sequencing data were fragmented across aligner-specific formats, making downstream analysis brittle and difficult to reproduce across platforms and projects. Li et al. made a decisive infrastructural move: they separated the representation of read alignments from any one aligner or sequencing technology. SAM’s text form, its compressed binary counterpart BAM, coordinate sorting, indexing, and random access turned alignment files into a portable substrate for large-scale genomics rather than intermediate byproducts of individual tools.
+
+This mattered because it made population-scale sequencing operational. The paper explicitly tied SAM/BAM to the 1000 Genomes Project, where standardized, randomly accessible alignments were essential for distributing and reanalyzing data at unprecedented scale. SAMtools also supplied common post-alignment operations, including viewing, indexing, and variant calling, so researchers could build workflows around a shared file format and toolchain instead of repeatedly translating between incompatible representations.
+
+The broader paradigm shift was that genomics gained something analogous to a systems interface: aligners, variant callers, genome browsers, quality-control tools, and pipelines could interoperate through a stable alignment/map layer. Subsequent breakthroughs in human variation discovery, cancer genomics, clinical sequencing, and large reference resources depended on this kind of standardization. The paper was not a new biological theory, but it changed what biological questions could be asked routinely by making massive sequencing datasets exchangeable, queryable, and computable at scale.
 
 ## Abstract
 
 SUMMARY: The Sequence Alignment/Map (SAM) format is a generic alignment format for storing read alignments against reference sequences, supporting short and long reads (up to 128 Mbp) produced by different sequencing platforms. It is flexible in style, compact in size, efficient in random access and is the format in which alignments from the 1000 Genomes Project are released. SAMtools implements various utilities for post-processing alignments in the SAM format, such as indexing, variant caller and alignment viewer, and thus provides universal tools for processing read alignments. AVAILABILITY: http://samtools.sourceforge.net.
 
+
+## Related
+
+- **cite** ← [Fast and accurate short read alignment with Burrows–Wheeler transform](10_1093_bioinformatics_btp324.md) — 
 
 
 ## Sources
