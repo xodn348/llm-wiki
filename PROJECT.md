@@ -118,10 +118,11 @@ their own corpus.
 
 ## Current state — 2026-05-19
 
-- v1.2 deployed at https://xodn348.github.io/llm-wiki/
+- v1.3 deployed at https://xodn348.github.io/llm-wiki/
 - **848 Fleming-tier papers**, paper-level graph with **1,438 labeled edges**
-- 96 papers have full LLM "why this mattered" prose; 752 ship with
-  abstract only while backfill runs in background
+- **581 papers** have full LLM "why this mattered" prose; 268 still on
+  abstract-only (Codex backend hit transient stream errors mid-backfill
+  around 17:42 CDT; remaining 268 will be filled in a follow-up pass)
 - LLM backend: Codex CLI (free)
-- Next action: LLM "why" backfill for 752 new papers (Phase 1 polish),
+- Next action: Finish backfill for the 268 remaining `_TBD_` pages,
   then Phase 2 (PDF fetch → PageIndex → chunk-level graph).

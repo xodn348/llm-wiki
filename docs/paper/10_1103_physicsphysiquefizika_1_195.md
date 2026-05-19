@@ -24,7 +24,11 @@ concepts:
 
 ## Why this mattered
 
-_TBD_
+Bell’s paper turned a philosophical dispute about quantum mechanics into an experimentally testable question. Einstein, Podolsky, and Rosen had argued in 1935 that quantum mechanics was incomplete if it required “spooky” nonlocal correlations; Bohr’s reply defended the orthodox view, but the debate remained largely interpretive. Bell showed that any theory preserving local hidden variables must satisfy a quantitative constraint, now called a Bell inequality. Quantum mechanics predicts violations of that constraint for entangled systems. This was the paradigm shift: locality, realism, and the completeness of quantum mechanics were no longer only matters of metaphysical preference, but could be separated by measurement.
+
+The paper made it newly possible to test whether the correlations predicted by quantum mechanics could be reproduced by any local underlying mechanism. Bell’s result did not merely criticize hidden-variable theories in general; it identified exactly what kind of hidden-variable account was ruled out if experiments agreed with quantum mechanics. That sharpened the foundations of physics by replacing broad arguments about interpretation with a precise theorem connecting assumptions to observable statistical bounds.
+
+Its influence is visible in the experimental and technological breakthroughs that followed. The work motivated increasingly refined Bell tests, from early photon-correlation experiments to later loophole-closing tests, which established violations of Bell inequalities under far stricter conditions. It also reframed entanglement from an interpretive puzzle into a physical resource, helping lay the conceptual foundation for quantum information science, including quantum cryptography, device-independent security, randomness certification, and quantum communication protocols. Bell’s 1964 paper therefore changed what physicists could ask of nature: not simply whether quantum mechanics was strange, but which classical assumptions about separability and locality nature refuses to obey.
 
 ## Abstract
 

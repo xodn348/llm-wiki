@@ -25,7 +25,11 @@ concepts:
 
 ## Why this mattered
 
-_TBD_
+Before VCF, large sequencing projects lacked a compact, shared representation for variant calls that could carry genotypes, quality scores, filters, and annotations across many samples while still supporting efficient genomic range queries. Danecek et al. mattered because it turned variant data from project-specific output into portable infrastructure. By standardizing SNPs, indels, and structural variants in a compressed, indexable text format, VCF made it practical for different callers, databases, and analysis tools to exchange results without first negotiating a bespoke schema.
+
+The immediate shift was especially important for population-scale genomics. The format was developed for the 1000 Genomes Project, where the central problem was not just detecting variants, but distributing and comparing millions of them across many individuals and analysis centers. Once VCF was adopted by resources such as dbSNP, UK10K, and the NHLBI Exome Project, variant calls became easier to merge, validate, filter, annotate, and reanalyze. VCFtools reinforced the standard by supplying common operations around the format, helping make VCF not merely a file specification but a working ecosystem.
+
+Its longer-term importance is that many later breakthroughs in human genetics and precision medicine depended on this layer of interoperability. Genome-wide association studies, rare-variant burden analyses, clinical variant interpretation pipelines, large biobank sequencing projects, and modern joint-calling workflows all rely on being able to represent variation consistently across cohorts and tools. VCF did not itself solve variant discovery, but it made variant discovery outputs composable, searchable, and shareable at scale, which is why it became one of the quiet standards underlying the genomic data era.
 
 ## Abstract
 

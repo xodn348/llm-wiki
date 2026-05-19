@@ -7,14 +7,15 @@
 
 [karp]: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
 
-## v1.2 status
+## v1.3 status
 
 The wiki indexes **848 papers** confirmed Fleming-tier by an LLM filter
 (Codex / GPT-5) over 2,248 candidates from OpenAlex's high-citation
 slice (`cited_by_count > 10000 && year < 2010` ∪ `cited_by_count >
-5000 && year ≥ 2010`). The first 96 papers have full LLM-written
-*Why this mattered* prose; the remaining 752 currently ship with just
-the abstract while the LLM backfill runs.
+5000 && year ≥ 2010`). **581 papers** have full LLM-written *Why this
+mattered* prose; the remaining 268 ship with abstract only — the Codex
+backfill will finish them in a follow-up pass once the upstream
+transient errors clear.
 
 Paper-level graph: **1,438 edges** (929 cite + 509 enables), every edge
 carries a one-sentence LLM "why related" label.

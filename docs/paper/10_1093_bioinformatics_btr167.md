@@ -24,7 +24,11 @@ concepts:
 
 ## Why this mattered
 
-_TBD_
+Before Bismark, whole-genome bisulfite sequencing had made single-base DNA methylation measurement possible, but the analysis was still technically awkward: bisulfite conversion destroys normal C/T symmetry, creating a mapping problem that standard short-read aligners did not solve by themselves. Krueger and Andrews’ contribution was not a new biological theory, but an enabling computational layer: Bismark combined bisulfite-aware alignment with methylation calling in one workflow, using converted read/genome representations and reporting methylation in CpG, CHG, and CHH contexts. That mattered because it turned BS-Seq from a specialist bioinformatics problem into a more routine assay that experimentalists could run, inspect, and interpret soon after sequencing.
+
+The paradigm shift was practical standardization. By supporting single-end and paired-end reads, directional and non-directional libraries, and multiple cytosine sequence contexts, Bismark helped make genome-wide methylation maps comparable across organisms, protocols, and laboratories. Its importance is reflected in its long use as a reference tool for whole-genome and reduced-representation bisulfite sequencing studies: downstream work in cancer epigenomics, plant methylomes, developmental biology, environmental epigenetics, and single-cell methylation methods could treat methylation calls as a scalable data layer rather than a bespoke computational artifact.
+
+Subsequent breakthroughs in epigenomics depended on exactly this kind of infrastructure. Large methylome atlases, differential methylation studies, and integrative analyses linking methylation with chromatin state, transcription, genotype, and disease all required reliable conversion from raw bisulfite reads into base-resolution methylation evidence. Bismark did not discover a new epigenetic mechanism; it made discovery faster and more reproducible by lowering the barrier between sequencing output and interpretable methylomes. Its citation record reflects that role: it became part of the methodological substrate on which modern population-scale and cell-type-resolved DNA methylation research was built.
 
 ## Abstract
 
