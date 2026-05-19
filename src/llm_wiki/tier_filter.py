@@ -70,14 +70,38 @@ def filter_heuristic(*, citation_floor: int = 5000, drop_no_doi: bool = True) ->
     return out
 
 
-def filter_candidates(*, batch_size: int = 25, limit: int | None = None) -> pl.DataFrame:
+def filter_candidates(
+    *, batch_size: int = 25, limit: int | None = None, incremental: bool = True
+) -> pl.DataFrame:
+    """Judge candidates. ``incremental=True`` skips DOIs already in core/rejected
+    and appends new verdicts, so re-runs don't re-spend LLM tokens or lose
+    confirmed Fleming-tier papers."""
     candidates = read_parquet(PATHS.candidates)
     if candidates.is_empty():
         raise RuntimeError(
             "No candidates. Run `llm-wiki seed` first."
         )
+
+    prior_core = read_parquet(PATHS.core) if PATHS.core.exists() else pl.DataFrame()
+    rejected_path = PATHS.raw / "rejected.parquet"
+    prior_rejected = read_parquet(rejected_path) if rejected_path.exists() else pl.DataFrame()
+
+    if incremental:
+        judged_dois: set[str] = set()
+        for df in (prior_core, prior_rejected):
+            if not df.is_empty() and "doi" in df.columns:
+                judged_dois |= set(df["doi"].drop_nulls().to_list())
+        if judged_dois:
+            candidates = candidates.filter(~pl.col("doi").is_in(list(judged_dois)))
+            logger.info("incremental: %d already judged, %d remaining",
+                        len(judged_dois), len(candidates))
+
     if limit:
         candidates = candidates.head(limit)
+
+    if candidates.is_empty():
+        logger.info("nothing to filter")
+        return prior_core
 
     llm = LLMClient()
     rows = candidates.to_dicts()
@@ -112,15 +136,32 @@ def filter_candidates(*, batch_size: int = 25, limit: int | None = None) -> pl.D
             len(batch),
         )
 
-    core_df = pl.from_dicts(accepted) if accepted else pl.DataFrame()
-    write_parquet(core_df, PATHS.core)
-    rej_df = pl.from_dicts(rejected) if rejected else pl.DataFrame()
+    new_core = pl.from_dicts(accepted) if accepted else pl.DataFrame()
+    new_rej = pl.from_dicts(rejected) if rejected else pl.DataFrame()
+
+    core_df = _merge(prior_core, new_core, incremental)
+    rej_df = _merge(prior_rejected, new_rej, incremental)
+    if not core_df.is_empty():
+        write_parquet(core_df, PATHS.core)
     if not rej_df.is_empty():
         write_parquet(rej_df, PATHS.raw / "rejected.parquet")
     logger.info(
-        "filter complete: accepted=%d rejected=%d", len(accepted), len(rejected)
+        "filter complete: new accepted=%d new rejected=%d (total core=%d)",
+        len(accepted), len(rejected), len(core_df),
     )
     return core_df
+
+
+def _merge(prior: pl.DataFrame, new: pl.DataFrame, incremental: bool) -> pl.DataFrame:
+    if not incremental:
+        return new
+    parts = [df for df in (prior, new) if not df.is_empty()]
+    if not parts:
+        return pl.DataFrame()
+    merged = parts[0] if len(parts) == 1 else pl.concat(parts, how="diagonal_relaxed")
+    if "doi" in merged.columns:
+        merged = merged.unique(subset=["doi"], keep="first")
+    return merged
 
 
 if __name__ == "__main__":
