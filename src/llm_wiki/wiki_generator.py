@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from typing import Any
 
 import polars as pl
@@ -12,6 +13,25 @@ from .llm_client import LLMClient
 from .storage import doi_slug, read_parquet
 
 logger = logging.getLogger(__name__)
+
+_WHY_RE = re.compile(
+    r"## Why this mattered\s*\n+(.+?)\n+##\s",
+    re.DOTALL,
+)
+
+
+def _existing_why(path) -> str | None:
+    """Return prior 'Why this mattered' body if the page already has real content."""
+    if not path.exists():
+        return None
+    text = path.read_text(encoding="utf-8")
+    m = _WHY_RE.search(text)
+    if not m:
+        return None
+    body = m.group(1).strip()
+    if not body or body == "_TBD_":
+        return None
+    return body
 
 
 WHY_SYSTEM = (
@@ -86,6 +106,7 @@ def generate(*, max_papers: int | None = None, with_llm: bool = True) -> int:
 
     llm = LLMClient() if with_llm else None
     written = 0
+    reused = 0
     for r in rows:
         doi = r["doi"]
         if not doi:
@@ -93,8 +114,10 @@ def generate(*, max_papers: int | None = None, with_llm: bool = True) -> int:
         slug = doi_slug(doi)
         out = PATHS.docs_paper / f"{slug}.md"
 
-        why = ""
-        if llm is not None:
+        why = _existing_why(out) or ""
+        if why:
+            reused += 1
+        elif llm is not None:
             try:
                 why = llm.text(_why_prompt(r), system=WHY_SYSTEM, max_tokens=900)
             except Exception as e:  # noqa: BLE001
@@ -125,7 +148,8 @@ def generate(*, max_papers: int | None = None, with_llm: bool = True) -> int:
         )
         out.write_text(body, encoding="utf-8")
         written += 1
-    logger.info("wrote %d paper pages", written)
+    logger.info("wrote %d paper pages (%d reused prior 'why', %d new LLM calls)",
+                written, reused, written - reused)
     return written
 
 

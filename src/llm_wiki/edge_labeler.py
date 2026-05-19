@@ -25,13 +25,22 @@ def label_all(*, batch: int = 20, max_edges: int | None = None) -> pl.DataFrame:
     if edges.is_empty():
         raise RuntimeError("No edges. Run `llm-wiki graph` first.")
     by_doi = {r["doi"]: r for r in metadata.iter_rows(named=True)}
-    rows = edges.to_dicts()
+    all_rows = edges.to_dicts()
+    labeled = [r for r in all_rows if r.get("label")]
+    to_label = [r for r in all_rows if not r.get("label")]
     if max_edges:
-        rows = rows[:max_edges]
+        to_label = to_label[:max_edges]
+    logger.info("edges: %d total, %d already labeled, %d to label",
+                len(all_rows), len(labeled), len(to_label))
+
+    if not to_label:
+        return edges
 
     llm = LLMClient()
 
-    out: list[dict[str, Any]] = []
+    out: list[dict[str, Any]] = list(labeled)
+    rows = to_label
+    save_every = max(1, 200 // batch)  # checkpoint roughly every 200 edges
     for start in range(0, len(rows), batch):
         chunk = rows[start : start + batch]
         prompt_lines = [
@@ -57,10 +66,26 @@ def label_all(*, batch: int = 20, max_edges: int | None = None) -> pl.DataFrame:
         for i, r in enumerate(chunk):
             out.append(dict(r, label=by_id.get(i)))
 
-    df = pl.from_dicts(out)
-    write_parquet(df, PATHS.edges)  # overwrite with labels
-    logger.info("labeled %d edges", len(out))
+        batch_idx = start // batch
+        if batch_idx % save_every == save_every - 1:
+            _checkpoint(out, all_rows, start + len(chunk), len(rows))
+
+    df = pl.from_dicts(out + [r for r in all_rows if r not in labeled and r["src_doi"] is None])
+    # Combine: prior labeled + newly labeled + any rows we never touched (limit case)
+    written = {(r["src_doi"], r["tgt_doi"], r["type"]) for r in out}
+    untouched = [r for r in all_rows if (r["src_doi"], r["tgt_doi"], r["type"]) not in written]
+    df = pl.from_dicts(out + untouched)
+    write_parquet(df, PATHS.edges)
+    logger.info("labeled %d edges (total rows in file: %d)", len(out) - len(labeled), len(df))
     return df
+
+
+def _checkpoint(out: list[dict[str, Any]], all_rows: list[dict[str, Any]], done: int, total: int) -> None:
+    written = {(r["src_doi"], r["tgt_doi"], r["type"]) for r in out}
+    untouched = [r for r in all_rows if (r["src_doi"], r["tgt_doi"], r["type"]) not in written]
+    df = pl.from_dicts(out + untouched)
+    write_parquet(df, PATHS.edges)
+    logger.info("checkpoint: %d/%d edges labeled", done, total)
 
 
 if __name__ == "__main__":

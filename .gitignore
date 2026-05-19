@@ -31,3 +31,6 @@ site/
 # Secrets
 .env
 .env.local
+
+# Local pipeline backups
+*.parquet.bak

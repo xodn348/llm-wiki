@@ -46,10 +46,12 @@ through an LLM tier filter.
 | LLM tier filter | Codex judges Fleming criteria, batch=20 | ~30–50 % pass rate |
 | Manual review | Spot-check rejections + missed classics | — |
 
-**Current state**: 4 of 9 sources wired → 3,155 candidates → 96 confirmed
-Fleming-tier from a 200-paper heuristic shortlist (48 % pass rate). Need
-to extend filter to the remaining ~2,000 candidates and wire the other 5
-seed sources to reach ~600.
+**Current state**: 4 of 9 sources wired → 3,155 candidates → **848 confirmed
+Fleming-tier** (96 prior + 752 from extended filter, ~37% pass rate over
+the full openalex pool). Right at the top of the 600 ± 200 target. Five
+other seed sources (Van Noorden Top 100, NIH Landmarks, APS Centennial,
+Garfield Classics, Wikipedia Year in Science) still pending — those
+would mostly add pre-1950 coverage that OpenAlex misses.
 
 **Definition of done**: 600 ± 200 papers in `data/raw/core.parquet`,
 each with OpenAlex metadata enriched, each with a paper page.
@@ -66,8 +68,9 @@ a chunk-level graph linking the corpus.
 | Edge labels | One-sentence "why related" on every edge | LLM (Codex), already working at v1.1 |
 | Concept overlay | OpenAlex Concepts + MeSH | already wired |
 
-**Current state**: paper-level cite + enables done (71 edges, all labeled).
-Chunk-level needs PDF fetch → PageIndex pass → tag → graph rebuild.
+**Current state**: paper-level cite + enables done — **1,438 edges, all
+labeled** (929 cite + 509 enables). Chunk-level needs PDF fetch →
+PageIndex pass → tag → graph rebuild.
 
 **Definition of done**: chunk-level graph with ≥3 edge types per paper
 on average, every edge labeled.
@@ -115,8 +118,10 @@ their own corpus.
 
 ## Current state — 2026-05-19
 
-- v1.1 deployed at https://xodn348.github.io/llm-wiki/
-- 96 Fleming-tier papers, paper-level graph (71 labeled edges)
+- v1.2 deployed at https://xodn348.github.io/llm-wiki/
+- **848 Fleming-tier papers**, paper-level graph with **1,438 labeled edges**
+- 96 papers have full LLM "why this mattered" prose; 752 ship with
+  abstract only while backfill runs in background
 - LLM backend: Codex CLI (free)
-- Next action: extend Phase 1 — filter remaining ~2,000 heuristic
-  candidates and wire 5 more seed sources to reach the 600 target.
+- Next action: LLM "why" backfill for 752 new papers (Phase 1 polish),
+  then Phase 2 (PDF fetch → PageIndex → chunk-level graph).
