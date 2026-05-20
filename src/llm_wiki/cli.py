@@ -12,6 +12,7 @@ from . import (
     edge_labeler,
     graph_builder,
     metadata_enricher,
+    obsidian_exporter,
     paper_fetcher,
     seed_assembler,
     tier_filter,
@@ -104,6 +105,12 @@ def wiki(max_papers: int | None = None, no_llm: bool = False) -> None:
 def viz() -> None:
     """10. UMAP map + Cytoscape graph."""
     viz_renderer.render_all()
+
+
+@app.command()
+def obsidian() -> None:
+    """11. Export as Obsidian vault for interactive graph browsing."""
+    obsidian_exporter.export()
 
 
 @app.command()
