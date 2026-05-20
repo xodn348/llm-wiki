@@ -116,13 +116,15 @@ their own corpus.
 - Exhaustive Fleming-tier judgments — LLM filter + manual spot-check is
   the v1 quality bar
 
-## Current state — 2026-05-19
+## Current state — 2026-05-20
 
-- v1.3 deployed at https://xodn348.github.io/llm-wiki/
+- v1.4 deployed at https://xodn348.github.io/llm-wiki/
 - **848 Fleming-tier papers**, paper-level graph with **1,438 labeled edges**
-- **581 papers** have full LLM "why this mattered" prose; 268 still on
-  abstract-only (Codex backend hit transient stream errors mid-backfill
-  around 17:42 CDT; remaining 268 will be filled in a follow-up pass)
+- **All 848 papers** have full LLM "why this mattered" prose
+- Obsidian vault (`obsidian-vault/`) shipped — 848 paper notes +
+  293 concept hubs, `[[wikilinks]]` for graph browsing
 - LLM backend: Codex CLI (free)
-- Next action: Finish backfill for the 268 remaining `_TBD_` pages,
-  then Phase 2 (PDF fetch → PageIndex → chunk-level graph).
+- Next action: Phase 2 (PDF fetch → PageIndex → chunk-level graph).
+  Optional Phase 1 polish: wire the 5 remaining seed sources
+  (Van Noorden, NIH Landmarks, APS Centennial, Garfield Classics,
+  Wikipedia Year-in-Science).

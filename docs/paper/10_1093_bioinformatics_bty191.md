@@ -24,7 +24,11 @@ concepts:
 
 ## Why this mattered
 
-_TBD_
+Minimap2 mattered because it turned long-read alignment from a specialized bottleneck into a general-purpose infrastructure problem that could be handled at scale. Earlier aligners were often optimized for one regime: short Illumina reads, noisy PacBio/Oxford Nanopore genomic reads, transcript reads, or assembly-to-reference comparison. Li’s contribution was not only speed, but unification: one mapper could align accurate short reads, noisy kilobase-to-ultralong reads, full-length RNA/cDNA reads, and very large contigs or chromosome-scale sequences with competitive or better accuracy. Its minimizer-based seeding, chaining heuristics, split-read support, and long-gap-aware scoring made it practical to treat long insertions, deletions, structural variation, exon-scale gaps, and assembly comparisons as routine alignment cases rather than exceptional workloads.
+
+The practical shift was that long-read sequencing could be used in everyday genomics pipelines without alignment becoming the limiting step. After minimap2, researchers could more readily map noisy nanopore and PacBio reads for structural-variant discovery, phase haplotypes, polish and compare assemblies, align full-length transcript reads, and evaluate chromosome-scale assemblies. This helped long-read analysis move from proof-of-concept studies into large-scale human, plant, microbial, and transcriptomic projects. Its speed also changed iteration: parameters, assemblies, samples, and cohorts could be reprocessed repeatedly, which matters when the biology depends on detecting complex rearrangements or transcript structures that short-read mappers were not designed to expose cleanly.
+
+Its influence is visible in the long-read ecosystem that followed. Tools for structural-variant calling, pangenome construction, telomere-to-telomere assembly evaluation, isoform discovery, and nanopore clinical or pathogen genomics commonly rely on minimap2 or on assumptions it helped normalize: that long noisy reads can be aligned quickly enough, accurately enough, and flexibly enough to serve as primary evidence. The paper did not create long-read sequencing, but it supplied one of the key computational primitives that made long-read sequencing broadly usable. In that sense, minimap2 was paradigm-shifting because it converted a rapidly improving experimental technology into a scalable analytical platform.
 
 ## Abstract
 
