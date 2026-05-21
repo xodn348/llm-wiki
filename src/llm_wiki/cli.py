@@ -72,9 +72,9 @@ def fetch() -> None:
 
 
 @app.command()
-def chunk() -> None:
+def chunk(force: bool = typer.Option(False, "--force", help="Re-chunk PDFs even if tree.json is up-to-date.")) -> None:
     """5. Build PageIndex semantic trees."""
-    chunker.chunk_all()
+    chunker.chunk_all(force=force)
 
 
 @app.command()
