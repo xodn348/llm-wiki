@@ -174,7 +174,9 @@ def _load_browser_cookies(browser: str | None = None) -> http.cookiejar.CookieJa
 
     No manual export required — reads directly from Chrome/Firefox/Safari
     cookie store on disk. On macOS Chrome this prompts for keychain access
-    once. Filters to TAMU EZproxy + Shibboleth + publisher session domains.
+    once. Loads all cookies (no domain filter) so Shibboleth SP cookies on
+    publisher and proxy subdomains are captured; the per-domain match is
+    handled by httpx when each request fires.
     """
     import browser_cookie3
     from collections.abc import Callable
@@ -187,28 +189,46 @@ def _load_browser_cookies(browser: str | None = None) -> http.cookiejar.CookieJa
         "brave": browser_cookie3.brave,
     }
 
+    def _summarize(jar) -> dict[str, int]:
+        counts: dict[str, int] = {}
+        for c in jar:
+            counts[c.domain] = counts.get(c.domain, 0) + 1
+        return counts
+
     if browser:
         if browser not in loaders:
             raise ValueError(f"unknown browser {browser!r}; pick one of {list(loaders)}")
         try:
-            return loaders[browser](domain_name="tamu.edu")
+            jar = loaders[browser]()
         except Exception as e:  # noqa: BLE001
             raise RuntimeError(f"{browser} cookie import failed: {e}") from e
+        relevant = {d: n for d, n in _summarize(jar).items()
+                    if "tamu" in d.lower() or "shibboleth" in d.lower()}
+        logger.info("loaded %d cookies from %s; tamu/shib domains: %s",
+                    sum(1 for _ in jar), browser, relevant or "(none)")
+        return jar
 
-    # Try each browser until one works
+    # Try each browser until one yields *tamu-related* cookies
     last_error = None
     for name, loader in loaders.items():
         try:
-            jar = loader(domain_name="tamu.edu")
-            if any(True for _ in jar):
-                logger.info("loaded TAMU cookies from %s", name)
+            jar = loader()
+            tamu_count = sum(
+                1 for c in jar
+                if "tamu" in c.domain.lower() or "shibboleth" in c.domain.lower()
+            )
+            if tamu_count > 0:
+                relevant = {d: n for d, n in _summarize(jar).items()
+                            if "tamu" in d.lower() or "shibboleth" in d.lower()}
+                logger.info("loaded %d cookies from %s; tamu/shib: %s",
+                            sum(1 for _ in jar), name, relevant)
                 return jar
         except Exception as e:  # noqa: BLE001
             last_error = e
             logger.debug("%s cookie import failed: %s", name, e)
             continue
     raise RuntimeError(
-        f"no browser had TAMU cookies (last error: {last_error}). "
+        f"no browser had TAMU/Shibboleth cookies (last error: {last_error}). "
         "Log into proxy.library.tamu.edu in your browser first."
     )
 
@@ -301,11 +321,14 @@ def fetch_with_tamu_cookies(
     statuses: list[dict] = []
     with httpx.Client(cookies=jar, headers=headers, follow_redirects=True, timeout=60.0) as c:
         if not _probe_session(c):
-            raise RuntimeError(
-                "TAMU session cookies appear expired or invalid. "
-                "Re-login at proxy.library.tamu.edu and re-export cookies."
+            logger.warning(
+                "session probe failed (proxy.library.tamu.edu/menu didn't authenticate). "
+                "Per-paper fetches may still work if the proxy auth flow is invoked "
+                "on first publisher hit. Continuing — re-run if all rows fail."
             )
-        logger.info("session OK; starting fetch of %d paywalled papers (delay=%.1fs)",
+        else:
+            logger.info("session OK")
+        logger.info("starting fetch of %d paywalled papers (delay=%.1fs)",
                     len(rows), rate_delay)
 
         for i, row in enumerate(rows, 1):

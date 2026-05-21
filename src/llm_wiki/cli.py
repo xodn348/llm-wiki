@@ -141,6 +141,19 @@ def paywall(out: str = "data/paywalled_urls.csv") -> None:
     paywall_tamu.write_proxied_urls(out)
 
 
+@app.command(name="fetch-oa")
+def fetch_oa(
+    max_papers: int | None = typer.Option(None, "--max-papers"),
+    delay: float = typer.Option(1.0, "--delay"),
+    sources: str = typer.Option("s2,ia,core", "--sources",
+                                help="Comma list of: s2, ia, core"),
+) -> None:
+    """17. Try free OA sources (Semantic Scholar / IA Scholar / CORE) for paywalled DOIs."""
+    from . import oa_multi_fetcher
+    srcs = tuple(s.strip() for s in sources.split(",") if s.strip())
+    oa_multi_fetcher.fetch_oa_multi(max_papers=max_papers, rate_delay=delay, sources=srcs)
+
+
 @app.command(name="fetch-tamu")
 def fetch_tamu(
     cookies: str | None = typer.Option(None, "--cookies",
