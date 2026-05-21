@@ -114,6 +114,13 @@ def obsidian() -> None:
 
 
 @app.command()
+def concepts() -> None:
+    """13. Generate the concept browser page."""
+    from . import concept_search
+    concept_search.generate_concept_browser()
+
+
+@app.command()
 def all_(skip_llm: bool = False) -> None:  # noqa: PLR0913
     """Run the entire pipeline."""
     seed_assembler.assemble()
