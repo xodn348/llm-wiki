@@ -60,6 +60,7 @@ nav:
   - Topics: topic/index.md
   - Lineages: lineage/index.md
   - Concepts: concepts.md
+  - About: about.md
   - Spec: superpowers/specs/2026-05-14-llm-wiki-design.md
 
 docs_dir: docs
