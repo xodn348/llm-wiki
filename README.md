@@ -1,88 +1,74 @@
 # llm-wiki
 
-> Personal LLM-maintained wiki of **paradigm-shifting scientific papers**
-> (Fleming-tier: Nobel-grade, field-founders, papers that enabled subsequent
-> breakthroughs). Chunk-level graph + topic atlas, [Karpathy LLM Wiki][karp]
-> pattern conformant.
+> A curated, LLM-maintained wiki of **paradigm-shifting scientific papers** —
+> Fleming-tier work that founded a field, caused a paradigm shift, or
+> enabled subsequent breakthroughs.
 
-[karp]: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
+**Live wiki:** [xodn348.github.io/llm-wiki](https://xodn348.github.io/llm-wiki/)
 
-**Live wiki:** https://xodn348.github.io/llm-wiki/
+**v1.5:** 848 papers · 1,438 labeled edges · 15 topics · 11 lineages · 3,273 concepts · MIT license
 
-## What this is
+## The 30-second pitch
 
-A few hundred papers across all of science, picked because they actually
-changed how humans understand or do something — not because they have
-high citations this year. For each paper:
+A small, durable, LLM-maintained wiki of the papers that **actually
+changed how humans understand or do something** — at the level of
+Fleming's penicillin (1929). Their relationships are visible as a
+graph you can browse, search, and learn from. The whole thing is
+generated from open data, runs on a single laptop, and ships as MIT
+open-source.
 
-- **Why it mattered** (paradigm shift, lineage of impact)
-- **What it enabled** (downstream breakthroughs)
-- **How it relates** to other paradigm-shifting papers — at the **chunk
-  level**, with LLM-written explanations on every edge
+For each paper: an LLM-written "Why this mattered" section, a paper-level
+citation + enables graph with one-sentence "why related" labels on every
+edge, topic clusters by OpenAlex concept, lineage walks through the
+`enables` subgraph, and a concept browser over the 3,273 OpenAlex
+concepts present in the corpus.
 
-Built around three open primitives:
+The wiki is built around three open primitives:
 
 | Primitive | Used for |
 |-----------|----------|
-| [Karpathy LLM Wiki pattern][karp] | Three-layer architecture (Raw / Wiki / Schema), `ingest` / `query` / `lint` operations |
-| [PageIndex][pi] | Per-paper semantic tree (sections + summaries) instead of arbitrary chunks |
-| [OpenAlex][oa] Concepts + MeSH | Standard concept tagging that interoperates with everything else |
+| [Karpathy LLM Wiki pattern][karp] | Three-layer architecture (Raw / Wiki / Schema), `ingest` / `query` / `lint` |
+| [PageIndex][pi] | Per-paper semantic tree instead of arbitrary chunks |
+| [OpenAlex][oa] Concepts + MeSH | Standard concept tagging that interoperates with everything |
 
+[karp]: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
 [pi]: https://github.com/VectifyAI/PageIndex
 [oa]: https://openalex.org/
 
-## How papers are picked
-
-Seeded from 9 authoritative sources, then LLM-filtered to Fleming-tier
-(see [`docs/superpowers/specs/2026-05-14-llm-wiki-design.md`][spec]):
-
-1. Nobel Prize references (1901–2024)
-2. Van Noorden "Top 100 papers" (Nature, 2014)
-3. Wikipedia "Year in science" 1900–2024
-4. NIH Landmark Publications
-5. APS Centennial Papers
-6. Karpathy AI reading list + Awesome ML Papers
-7. Garfield Citation Classics
-8. OpenAlex `cited_by_count > 10000 AND year < 2010`
-9. Wikipedia "List of Nobel laureates" key publications
-
-Dedup → ~1500 candidates → LLM tier filter → ~600 confirmed Fleming-tier.
-
-[spec]: docs/superpowers/specs/2026-05-14-llm-wiki-design.md
-
-## Standards used (interop)
-
-| Layer | Standard |
-|-------|----------|
-| Identifiers | DOI / OpenAlex Work ID / arXiv ID |
-| Bibliographic | CSL-JSON |
-| Concepts | OpenAlex Concepts + MeSH + CSO |
-| Graph | JSON-LD + schema.org/CreativeWork (+ GraphML/GEXF export) |
-| Wiki content | Markdown + YAML frontmatter |
-| Embeddings | Parquet |
-| Storage | DuckDB + ChromaDB |
-
-No project-private formats are introduced — every artefact is one
-conversion away from any other system.
-
-## Run it
+## Quick start
 
 ```bash
-uv sync
-uv run llm-wiki all          # full pipeline
-uv run llm-wiki seed         # 1. assemble candidates from 9 sources
-uv run llm-wiki filter       # 2. LLM tier filter
-uv run llm-wiki enrich       # 3. OpenAlex metadata
-uv run llm-wiki fetch        # 4. download papers
-uv run llm-wiki chunk        # 5. PageIndex trees
-uv run llm-wiki tag          # 6. concept tagging
-uv run llm-wiki graph        # 7. cross-paper graph
-uv run llm-wiki label        # 8. LLM "why related" labels
-uv run llm-wiki wiki         # 9. generate markdown wiki
-uv run llm-wiki viz          # 10. UMAP map + Cytoscape graph
-mkdocs serve                 # preview locally
+git clone https://github.com/xodn348/llm-wiki.git
+cd llm-wiki
+uv sync --extra dev
+uv run llm-wiki --help
+uv run mkdocs serve            # preview locally at http://localhost:8000
 ```
+
+Full pipeline (each step idempotent + incremental):
+
+```bash
+uv run llm-wiki all            # seed → filter → enrich → fetch → chunk
+                               # → tag → graph → label → wiki → viz
+                               # → topic → lineage → concepts
+```
+
+## Pointers
+
+| Where | What |
+|-------|------|
+| [docs/about.md](docs/about.md) | Methodology, Fleming-tier criteria, the six caveats users should know |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How to suggest a paper, flag a misjudgment, rebuild the corpus |
+| [PROJECT.md](PROJECT.md) | Four-phase roadmap and current status |
+| [CLAUDE.md](CLAUDE.md) | Schema layer — page conventions, edge types, standards |
+| [CHANGELOG.md](CHANGELOG.md) | What shipped in each release |
+| [Live site](https://xodn348.github.io/llm-wiki/) | The deployed wiki |
 
 ## License
 
-MIT
+MIT — see [LICENSE](LICENSE). Paper metadata sourced from
+[OpenAlex](https://openalex.org/) under CC0. LLM-written prose
+(the "Why this mattered" sections, edge labels, topic syntheses,
+lineage narratives) is generated content — attribute to the
+llm-wiki project if reused, and to the original authors for the
+underlying papers.
