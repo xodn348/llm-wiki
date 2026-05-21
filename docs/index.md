@@ -7,29 +7,34 @@
 
 [karp]: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
 
-## v1.5 status
+## v1.6 status
 
-The wiki indexes **848 papers** confirmed Fleming-tier by an LLM filter
+The wiki indexes **902 papers** confirmed Fleming-tier by an LLM filter
 (Codex / GPT-5) over 3,392 candidates from nine authoritative seed
 sources (OpenAlex high-citation slice, Nobel laureates, Karpathy's ML
 reading list, Van Noorden Top 100, NIH Landmarks, APS Centennial,
 Garfield Citation Classics, Wikipedia "Important publications in X").
-**All 848 papers** carry an LLM-written *Why this mattered* section
+**All 902 papers** carry an LLM-written *Why this mattered* section
 grounded in the abstract and historical context.
 
-Paper-level graph: **1,438 edges** (929 cite + 509 enables), every edge
-carries a one-sentence LLM "why related" label.
+Paper-level graph: **1,540 edges**, every edge carries a one-sentence
+LLM "why related" label.
 
-New in v1.5:
+New in v1.6:
 
-- [**Topics**](topic/index.md) — papers clustered by OpenAlex top-level
-  concept, each topic with an LLM 2-paragraph synthesis.
-- [**Lineages**](lineage/index.md) — longest chains in the `enables`
+- [**Topics**](topic/index.md) — 14 OpenAlex top-level concept clusters,
+  each with an LLM 2-paragraph synthesis.
+- [**Lineages**](lineage/index.md) — 10 longest chains in the `enables`
   subgraph, walked step-by-step with grounded prose.
-- [**Concepts**](concepts.md) — sortable, filterable browser over all
-  3,273 OpenAlex Concepts present in the corpus, click-to-expand papers.
-- **PDF corpus** — 129 open-access PDFs cached locally (282 MB,
-  gitignored), seeding Phase 2 chunk-level work. 636 remain paywalled.
+- [**Concepts**](concepts.md) — sortable browser over all
+  **3,440 OpenAlex Concepts** in the corpus, click-to-expand papers.
+- [**About**](about.md) — methodology, Fleming-tier criteria, and
+  honest caveats (publisher / time / language / OA / LLM-judgment
+  biases).
+- [**Paywall workaround**](paywall.md) — TAMU EZproxy / OpenURL /
+  LibKey URLs for the 636 paywalled DOIs (`data/paywalled_urls.csv`).
+- **Phase 2 kicked off** — 113 OA PDFs chunked via pypdf fallback
+  → 6,580 leaf nodes in `data/graph/nodes.parquet`.
 
 Also shipping: an **Obsidian vault** (`obsidian-vault/` in the repo) —
 848 paper notes + 293 concept hub notes linked via `[[wikilinks]]`,

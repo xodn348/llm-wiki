@@ -1,22 +1,23 @@
 ---
 title: Chemistry
-papers: 42
+papers: 45
 top_concept_id: https://openalex.org/C185592680
 ---
 
 # Chemistry
 
-_42 Fleming-tier papers._
+_45 Fleming-tier papers._
 
 ## Synthesis
 
-These Fleming-tier chemistry papers collectively trace chemistry’s expansion from a discipline of bulk matter, surfaces, and reactions into a molecular infrastructure for biology, computation, materials, and medicine. The earliest lineage centers on physical chemistry: phase-change kinetics, porous-surface wettability, interfacial free energy, and later solubility, permeability, and single-atom catalysis. A second lineage is analytical and biochemical standardization: protein assays, lipid extraction, electrophoresis, SDS-PAGE, two-dimensional gels, blotting, RNA isolation, cellular viability assays, calcium indicators, and proteomics software made biological molecules measurable, comparable, and scalable. These papers did not merely report findings; they supplied the protocols by which later molecular biology, clinical chemistry, pharmacology, and systems biology could operate.
+These Fleming-tier chemistry papers collectively trace chemistry’s expansion from a discipline of substances and reactions into a central language for biology, materials, computation, and medicine. One dominant lineage is physical and theoretical chemistry: phase-change kinetics, porous-surface wettability, interfacial free energy, polymer reptation, Gaussian basis sets, Hartree-Fock and density-functional methods, and empirical protein force fields mark the move from phenomenological description toward quantitative molecular modeling. A second lineage is analytical and biochemical method-making: protein assays, lipid and RNA extraction, electrophoresis, Western transfer, two-dimensional gels, sequencing, fluorescence calcium indicators, and MaxQuant made biomolecules measurable at increasing scale and precision.
 
-The largest paradigm shifts are molecularization and computation. The DNA double-helix paper and chain-termination sequencing turned heredity into chemical structure and readable information. Cytochrome P450, superoxide dismutase, nitric oxide signaling, protein secondary-structure dictionaries, and the SARS-CoV-2 spike structure show chemistry becoming inseparable from physiology and structural biology. In parallel, Gaussian basis sets, Hartree-Fock methods, hybrid density-functional theory, and empirical protein force fields made molecules calculable objects, linking chemistry to physics, computer science, and drug discovery. Materials chemistry appears through fullerenes, perovskite photovoltaics, biodegradable porous calcium polyphosphate, and click chemistry, which reframed synthesis around modular reliability. Together, the cluster represents chemistry as a set of concepts, instruments, and reaction logics that connect atomic-scale explanation to living systems, engineered materials, and therapeutic technologies.
+The major paradigm shifts are correspondingly broad: DNA’s chemical identification and double-helical structure turned heredity into molecular chemistry; synthetic polyribonucleotides linked nucleic-acid sequence to protein synthesis; Sanger sequencing transformed biology into readable molecular information; fullerene chemistry, click chemistry, perovskites, and single-atom catalysis opened new regimes of molecular architecture, modular synthesis, energy materials, and catalytic control. The cluster also shows chemistry’s porous borders: nitric oxide and superoxide dismutase connect redox chemistry to physiology; cytochrome P450, LDL cholesterol estimation, cytotoxicity assays, and Lipinski-style solubility/permeability rules connect chemistry to pharmacology and clinical science; YAP/TAZ mechanotransduction and the SARS-CoV-2 spike structure connect molecular structure to cell mechanics and infectious disease. Taken together, the papers represent chemistry as an enabling infrastructure: it explains matter, builds matter, measures life, and increasingly computes, images, and engineers molecular systems.
 
 ## Papers
 
 - 1939 — [Kinetics of Phase Change. I General Theory](../paper/10_1063_1_1750380.md)
+- 1944 — [STUDIES ON THE CHEMICAL NATURE OF THE SUBSTANCE INDUCING TRANSFORMATION OF PNEUMOCOCCAL TYPES](../paper/10_1084_jem_79_2_137.md)
 - 1944 — [Wettability of porous surfaces](../paper/10_1039_tf9444000546.md)
 - 1949 — [THE ATTRACTIONS OF PROTEINS FOR SMALL MOLECULES AND IONS](../paper/10_1111_j_1749_6632_1949_tb27297_x.md)
 - 1951 — [PROTEIN MEASUREMENT WITH THE FOLIN PHENOL REAGENT](../paper/10_1016_s0021_9258_19_52451_6.md)
@@ -24,30 +25,32 @@ The largest paradigm shifts are molecularization and computation. The DNA double
 - 1957 — [A SIMPLE METHOD FOR THE ISOLATION AND PURIFICATION OF TOTAL LIPIDES FROM ANIMAL TISSUES](../paper/10_1016_s0021_9258_18_64849_5.md)
 - 1958 — [Free Energy of a Nonuniform System. I. Interfacial Free Energy](../paper/10_1063_1_1744102.md)
 - 1959 — [A RAPID METHOD OF TOTAL LIPID EXTRACTION AND PURIFICATION](../paper/10_1139_o59_099.md)
+- 1961 — [The dependence of cell-free protein synthesis in <i>E. coli</i> upon naturally occurring or synthetic polyribonucleotides](../paper/10_1073_pnas_47_10_1588.md)
 - 1964 — [DISC ELECTROPHORESIS – II METHOD AND APPLICATION TO HUMAN SERUM PROTEINS*](../paper/10_1111_j_1749_6632_1964_tb14213_x.md)
 - 1964 — [The Carbon Monoxide-binding Pigment of Liver Microsomes](../paper/10_1016_s0021_9258_20_82244_3.md)
-- 1969 — [The Reliability of Molecular Weight Determinations by Dodecyl Sulfate-Polyacrylamide Gel Electrophoresis](../paper/10_1016_s0021_9258_18_94333_4.md)
 - 1969 — [Superoxide Dismutase](../paper/10_1016_s0021_9258_18_63504_5.md)
+- 1969 — [The Reliability of Molecular Weight Determinations by Dodecyl Sulfate-Polyacrylamide Gel Electrophoresis](../paper/10_1016_s0021_9258_18_94333_4.md)
 - 1970 — [Cleavage of Structural Proteins during the Assembly of the Head of Bacteriophage T4](../paper/10_1038_227680a0.md)
 - 1971 — [Self-Consistent Molecular-Orbital Methods. IX. An Extended Gaussian-Type Basis for Molecular-Orbital Studies of Organic Molecules](../paper/10_1063_1_1674902.md)
+- 1971 — [Reptation of a Polymer Chain in the Presence of Fixed Obstacles](../paper/10_1063_1_1675789.md)
 - 1972 — [Estimation of the Concentration of Low-Density Lipoprotein Cholesterol in Plasma, Without Use of the Preparative Ultracentrifuge](../paper/10_1093_clinchem_18_6_499.md)
 - 1975 — [High resolution two-dimensional electrophoresis of proteins.](../paper/10_1016_s0021_9258_19_41496_8.md)
-- 1976 — [A Rapid and Sensitive Method for the Quantitation of Microgram Quantities of Protein Utilizing the Principle of Protein-Dye Binding](../paper/10_1006_abio_1976_9999.md)
 - 1976 — [A rapid and sensitive method for the quantitation of microgram quantities of protein utilizing the principle of protein-dye binding](../paper/10_1016_0003_2697_76_90527_3.md)
+- 1976 — [A Rapid and Sensitive Method for the Quantitation of Microgram Quantities of Protein Utilizing the Principle of Protein-Dye Binding](../paper/10_1006_abio_1976_9999.md)
 - 1977 — [DNA sequencing with chain-terminating inhibitors](../paper/10_1073_pnas_74_12_5463.md)
-- 1979 — [Isolation of biologically active ribonucleic acid from sources enriched in ribonuclease](../paper/10_1021_bi00591a005.md)
 - 1979 — [Electrophoretic transfer of proteins from polyacrylamide gels to nitrocellulose sheets: procedure and some applications.](../paper/10_1073_pnas_76_9_4350.md)
+- 1979 — [Isolation of biologically active ribonucleic acid from sources enriched in ribonuclease](../paper/10_1021_bi00591a005.md)
 - 1980 — [The obligatory role of endothelial cells in the relaxation of arterial smooth muscle by acetylcholine](../paper/10_1038_288373a0.md)
 - 1983 — [Dictionary of protein secondary structure: Pattern recognition of hydrogen‐bonded and geometrical features](../paper/10_1002_bip_360221211.md)
 - 1983 — [Rapid colorimetric assay for cellular growth and survival: Application to proliferation and cytotoxicity assays](../paper/10_1016_0022_1759_83_90303_4.md)
-- 1985 — [C60: Buckminsterfullerene](../paper/10_1038_318162a0.md)
 - 1985 — [A new generation of Ca2+ indicators with greatly improved fluorescence properties.](../paper/10_1016_s0021_9258_19_83641_4.md)
+- 1985 — [C60: Buckminsterfullerene](../paper/10_1038_318162a0.md)
 - 1987 — [Single-Step Method of RNA Isolation by Acid Guanidinium Thiocyanate–Phenol–Chloroform Extraction](../paper/10_1006_abio_1987_9999.md)
-- 1987 — [Single-step method of RNA isolation by acid guanidinium thiocyanate-phenol-chloroform extraction](../paper/10_1016_0003_2697_87_90021_2.md)
 - 1987 — [Nitric oxide release accounts for the biological activity of endothelium-derived relaxing factor](../paper/10_1038_327524a0.md)
+- 1987 — [Single-step method of RNA isolation by acid guanidinium thiocyanate-phenol-chloroform extraction](../paper/10_1016_0003_2697_87_90021_2.md)
 - 1989 — [Gaussian basis sets for use in correlated molecular calculations. I. The atoms boron through neon and hydrogen](../paper/10_1063_1_456153.md)
-- 1993 — [A new mixing of Hartree–Fock and local density-functional theories](../paper/10_1063_1_464304.md)
 - 1993 — [Density-functional thermochemistry. III. The role of exact exchange](../paper/10_1063_1_464913.md)
+- 1993 — [A new mixing of Hartree–Fock and local density-functional theories](../paper/10_1063_1_464304.md)
 - 1997 — [Experimental and computational approaches to estimate solubility and permeability in drug discovery and development settings](../paper/10_1016_s0169_409x_96_00423_1.md)
 - 1998 — [All-Atom Empirical Potential for Molecular Modeling and Dynamics Studies of Proteins](../paper/10_1021_jp973084f.md)
 - 2001 — [Click Chemistry: Diverse Chemical Function from a Few Good Reactions](../paper/10_1002_1521_3773_20010601_40_11_2004__aid_anie2004_3_0_co_2_5.md)

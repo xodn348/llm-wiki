@@ -6,7 +6,7 @@ year: 2009
 venue: Bioinformatics
 authors: Heng Li, Bob Handsaker, Alec Wysoker, Tim Fennell, Jue Ruan, Nils Homer,
   Gábor Marth, Gonçalo R. Abecasis
-citations: 66938
+citations: 66958
 fleming_tier: true
 concepts:
 - Computer science
@@ -38,16 +38,16 @@ SUMMARY: The Sequence Alignment/Map (SAM) format is a generic alignment format f
 
 ## Related
 
-- **cite** → [Ultrafast and memory-efficient alignment of short DNA sequences to the human genome](10_1186_gb_2009_10_3_r25.md) — SAMtools provides the SAM/BAM data format and processing utilities used to store and manipulate short-read alignments produced by Bowtie.
-- **enables** → [A new coronavirus associated with human respiratory disease in China](10_1038_s41586_020_2008_3.md) — SAMtools provided the standard read-alignment and variant-processing infrastructure used to assemble and analyze sequencing data from the new coronavirus.
-- **enables** → [Minimap2: pairwise alignment for nucleotide sequences](10_1093_bioinformatics_bty191.md) — SAM/BAM standardization enabled minimap2 to output interoperable alignments directly into common genomics analysis pipelines.
-- **cite** ← [A framework for variation discovery and genotyping using next-generation DNA sequencing data](10_1038_ng_806.md) — The GATK framework uses the SAM/BAM alignment format and SAMtools ecosystem as core infrastructure for storing and processing sequencing reads.
-- **cite** ← [Fast and accurate short read alignment with Burrows–Wheeler transform](10_1093_bioinformatics_btp324.md) — BWA relates to SAMtools through the SAM alignment format used to store and process short-read mapping results.
-- **cite** ← [The variant call format and VCFtools](10_1093_bioinformatics_btr330.md) — VCFtools complements SAMtools by storing variant calls derived from sequence alignments represented in the SAM/BAM format.
-- **cite** ← [A new coronavirus associated with human respiratory disease in China](10_1038_s41586_020_2008_3.md) — The coronavirus genome study used SAMtools/SAM-format read alignment workflows to assemble and analyze sequencing data from patient samples.
-- **cite** ← [Transcript assembly and quantification by RNA-Seq reveals unannotated transcripts and isoform switching during cell differentiation](10_1038_nbt_1621.md) — Cufflinks uses SAM/BAM alignment files and SAMtools conventions as the input representation for RNA-Seq transcript assembly and quantification.
-- **cite** ← [Minimap2: pairwise alignment for nucleotide sequences](10_1093_bioinformatics_bty191.md) — Minimap2 outputs and interoperates with the SAM/BAM alignment ecosystem defined by the SAM format and SAMtools paper.
-- **cite** ← [A map of human genome variation from population-scale sequencing](10_1038_nature09534.md) — The 1000 Genomes Project cites Li et al. because SAMtools and the SAM/BAM format provided core infrastructure for aligning and calling variants from population-scale sequencing data.
+- **cite** → [Ultrafast and memory-efficient alignment of short DNA sequences to the human genome](10_1186_gb_2009_10_3_r25.md) — SAMtools standardizes storage and manipulation of alignments produced by Bowtie's ultrafast short-read alignment method.
+- **enables** → [Minimap2: pairwise alignment for nucleotide sequences](10_1093_bioinformatics_bty191.md) — SAM/BAM gave minimap2 a standard alignment output and tooling ecosystem for representing and downstream-processing nucleotide mappings.
+- **enables** → [A new coronavirus associated with human respiratory disease in China](10_1038_s41586_020_2008_3.md) — SAM/BAM and SAMtools enabled standardized mapping, sorting, and analysis of sequencing reads used to assemble and characterize the novel coronavirus genome.
+- **cite** ← [A framework for variation discovery and genotyping using next-generation DNA sequencing data](10_1038_ng_806.md) — The GATK framework builds on SAM/BAM and SAMtools conventions for storing, manipulating, and preprocessing aligned next-generation sequencing reads.
+- **cite** ← [The variant call format and VCFtools](10_1093_bioinformatics_btr330.md) — VCFtools complements SAMtools by standardizing variant-call data downstream of sequence alignments represented in SAM/BAM format.
+- **cite** ← [Fast and accurate short read alignment with Burrows–Wheeler transform](10_1093_bioinformatics_btp324.md) — BWA outputs alignments in the SAM format and relies on SAMtools-compatible conventions for downstream read-mapping analysis.
+- **cite** ← [A map of human genome variation from population-scale sequencing](10_1038_nature09534.md) — The 1000 Genomes variant map used SAM/BAM alignment infrastructure and SAMtools for population-scale sequencing data processing.
+- **cite** ← [Transcript assembly and quantification by RNA-Seq reveals unannotated transcripts and isoform switching during cell differentiation](10_1038_nbt_1621.md) — Cufflinks relies on the SAM alignment format and SAMtools ecosystem to consume and process RNA-Seq read alignments.
+- **cite** ← [Minimap2: pairwise alignment for nucleotide sequences](10_1093_bioinformatics_bty191.md) — Minimap2 emits and interoperates with SAM/BAM alignments defined by the SAM format and SAMtools ecosystem.
+- **cite** ← [A new coronavirus associated with human respiratory disease in China](10_1038_s41586_020_2008_3.md) — The China coronavirus genome paper cites SAMtools because it used sequence alignment and read-processing methods for viral genome assembly and analysis.
 
 
 ## Sources

@@ -5,7 +5,7 @@ openalex_id: https://openalex.org/W2135830616
 year: 1964
 venue: Physics Physique Fizika
 authors: J. S. Bell
-citations: 12166
+citations: 12167
 fleming_tier: true
 concepts:
 - Einstein
@@ -37,8 +37,8 @@ Received 4 November 1964DOI:https://doi.org/10.1103/PhysicsPhysiqueFizika.1.195C
 
 ## Related
 
-- **cite** → [Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?](10_1103_physrev_47_777.md) — Bell formulated his inequality to test the EPR claim that quantum mechanics is incomplete under locality and hidden variables.
-- **enables** ← [Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?](10_1103_physrev_47_777.md) — The EPR paper posed the locality-and-completeness dilemma that Bell converted into experimentally testable inequality constraints.
+- **cite** → [Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?](10_1103_physrev_47_777.md) — Bell's theorem paper directly responds to the EPR claim that quantum mechanics is incomplete by deriving inequalities for local hidden-variable theories.
+- **enables** ← [Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?](10_1103_physrev_47_777.md) — The EPR paper posed the locality-and-completeness paradox that Bell converted into experimentally testable inequalities.
 
 
 ## Sources

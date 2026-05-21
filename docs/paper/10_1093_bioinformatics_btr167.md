@@ -5,7 +5,7 @@ openalex_id: https://openalex.org/W2131374955
 year: 2011
 venue: Bioinformatics
 authors: Felix Krueger, Simon Andrews
-citations: 5851
+citations: 5852
 fleming_tier: true
 concepts:
 - DNA methylation
@@ -37,7 +37,7 @@ Abstract Summary: A combination of bisulfite treatment of DNA and high-throughpu
 
 ## Related
 
-- **cite** → [Ultrafast and memory-efficient alignment of short DNA sequences to the human genome](10_1186_gb_2009_10_3_r25.md) — Bismark uses Bowtie's ultrafast short-read alignment as the core mapping engine for bisulfite-converted DNA reads.
+- **cite** → [Ultrafast and memory-efficient alignment of short DNA sequences to the human genome](10_1186_gb_2009_10_3_r25.md) — Bismark uses the Bowtie short-read aligner as the core mapping engine for bisulfite-converted sequencing reads.
 
 
 ## Sources

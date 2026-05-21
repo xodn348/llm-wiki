@@ -123,20 +123,28 @@ their own corpus.
 
 ## Current state — 2026-05-21
 
-- v1.5 deployed at https://xodn348.github.io/llm-wiki/
-- **848 Fleming-tier papers** with full LLM "Why this mattered" prose,
-  paper-level graph with **1,438 labeled edges**
-- All **9 seed sources wired** → 3,392 candidates (237 newly added,
-  not-yet-judged by tier filter — next pass will append to core)
-- New browse surfaces: **15 topic pages** (clustered by OpenAlex
-  top-level concept), **11 lineage pages** (longest paths in the
-  enables-subgraph), **concept browser** over 3,273 OpenAlex concepts
-  (`docs/concepts.md`)
-- **129 PDFs cached** via Unpaywall OA (282 MB, gitignored), 83 HTML
-  landing pages, 636 paywalled — Phase 2 chunk-level can now start
-- Obsidian vault (`obsidian-vault/`) shipped — 848 paper notes +
-  293 concept hubs, `[[wikilinks]]` for graph browsing
+- v1.6 deployed at https://xodn348.github.io/llm-wiki/
+- **902 Fleming-tier papers** (was 848, +54 from the 5 curated seed
+  sources — 88% accept rate on those, vs ~37% on raw OpenAlex). All
+  with full LLM "Why this mattered" prose.
+- Paper-level graph: **1,540 labeled edges** (was 1,438, +102 new),
+  every edge labeled.
+- All **9 seed sources wired** → 3,392 candidates → 2,309 judged
+  (902 Fleming + 1,407 rejected).
+- Browse surfaces: **14 topic pages**, **10 lineage pages**, concept
+  browser over **3,440 OpenAlex concepts** (`docs/concepts.md`).
+- **PDF corpus**: 129 OA PDFs cached (282 MB local, gitignored). 636
+  paywalled — `data/paywalled_urls.csv` has TAMU EZproxy/OpenURL/LibKey
+  URLs for manual download (see `docs/paywall.md`).
+- **Phase 2 chunk-level kicked off**: PageIndex (pypdf fallback) ran
+  on 113 PDFs → **6,580 leaf nodes** in `data/graph/nodes.parquet`.
+  Hosted PageIndex API available via `PAGEINDEX_API_KEY` for real
+  hierarchical trees.
+- Polish: `docs/about.md` (methodology + caveats), `CONTRIBUTING.md`,
+  `CHANGELOG.md`, README rewritten. `v1.5` git tag created.
 - LLM backend: Codex CLI (free)
-- Next action: (a) `llm-wiki filter` over the 237 newly-added
-  candidates, (b) Phase 2 — PageIndex on the 129 OA PDFs →
-  chunk-level edges (builds-on / same-method / contradicts).
+- Next action: (a) Phase 2 — derive chunk-level edges (builds-on /
+  same-method / contradicts) from `nodes.parquet`, label, integrate
+  into paper pages. (b) Phase 4 — push `v1.5` and `v1.6` git tags;
+  manual download via TAMU EZproxy of the highest-priority paywalled
+  papers for chunk-level coverage.

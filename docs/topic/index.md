@@ -8,14 +8,14 @@ Fleming-tier papers grouped by their dominant OpenAlex top-level Concept (level 
 
 _14 clusters, sorted by paper count._
 
-- [Computer science](computer-science.md) — 207 papers
-- [Biology](biology.md) — 128 papers
-- [Medicine](medicine.md) — 84 papers
+- [Computer science](computer-science.md) — 208 papers
+- [Biology](biology.md) — 142 papers
+- [Physics](physics.md) — 92 papers
+- [Medicine](medicine.md) — 86 papers
 - [Mathematics](mathematics.md) — 83 papers
-- [Physics](physics.md) — 62 papers
 - [Psychology](psychology.md) — 62 papers
-- [Materials science](materials-science.md) — 51 papers
-- [Chemistry](chemistry.md) — 42 papers
+- [Materials science](materials-science.md) — 54 papers
+- [Chemistry](chemistry.md) — 45 papers
 - [Economics](economics.md) — 37 papers
 - [Business](business.md) — 31 papers
 - [Sociology](sociology.md) — 30 papers

@@ -7,7 +7,7 @@ year: 1996
 venue: European Heart Journal
 authors: Marek Malik, J. Thomas Bigger, A. John Camm, R. E. Kleiger, Alberto Malliani,
   A. J. Moss, Peter J. Schwartz
-citations: 15258
+citations: 15259
 fleming_tier: true
 concepts:
 - Medicine

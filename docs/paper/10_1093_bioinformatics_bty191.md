@@ -5,7 +5,7 @@ openalex_id: https://openalex.org/W2789843538
 year: 2018
 venue: Bioinformatics
 authors: Heng Li
-citations: 16468
+citations: 16482
 fleming_tier: true
 concepts:
 - Pairwise comparison
@@ -37,12 +37,14 @@ Abstract Motivation Recent advances in sequencing technologies promise ultra-lon
 
 ## Related
 
-- **cite** → [Fast and accurate short read alignment with Burrows–Wheeler transform](10_1093_bioinformatics_btp324.md) — Minimap2 builds on the Burrows-Wheeler-transform alignment lineage represented by BWA while adapting alignment to long noisy reads and assemblies.
-- **cite** → [The Sequence Alignment/Map format and SAMtools](10_1093_bioinformatics_btp352.md) — Minimap2 outputs and interoperates with the SAM/BAM alignment ecosystem defined by the SAM format and SAMtools paper.
-- **cite** → [A framework for variation discovery and genotyping using next-generation DNA sequencing data](10_1038_ng_806.md) — Minimap2 is positioned upstream of variant-discovery workflows such as GATK by providing read alignments used for genotyping from sequencing data.
-- **enables** ← [Fast and accurate short read alignment with Burrows–Wheeler transform](10_1093_bioinformatics_btp324.md) — BWA's Burrows-Wheeler indexing enabled minimap2's emphasis on fast seed-and-extend alignment for large-scale nucleotide read mapping.
-- **enables** ← [The Sequence Alignment/Map format and SAMtools](10_1093_bioinformatics_btp352.md) — SAM/BAM standardization enabled minimap2 to output interoperable alignments directly into common genomics analysis pipelines.
-- **enables** ← [A framework for variation discovery and genotyping using next-generation DNA sequencing data](10_1038_ng_806.md) — GATK's variant-discovery workflows depend on accurate read-to-reference alignment, a core capability later accelerated and generalized by Minimap2's seed-chain-align method.
+- **cite** → [Fast and accurate short read alignment with Burrows–Wheeler transform](10_1093_bioinformatics_btp324.md) — Minimap2 uses seed-and-extend alignment ideas related to BWA's Burrows-Wheeler-transform indexing for fast nucleotide alignment.
+- **cite** → [The Sequence Alignment/Map format and SAMtools](10_1093_bioinformatics_btp352.md) — Minimap2 emits and interoperates with SAM/BAM alignments defined by the SAM format and SAMtools ecosystem.
+- **cite** → [Gapped BLAST and PSI-BLAST: a new generation of protein database search programs](10_1093_nar_25_17_3389.md) — Minimap2's chaining and gapped alignment stage follows the seed-extension lineage of Gapped BLAST.
+- **cite** → [A framework for variation discovery and genotyping using next-generation DNA sequencing data](10_1038_ng_806.md) — Minimap2 supports variant-discovery workflows that commonly feed alignments into GATK-style genotyping frameworks.
+- **enables** ← [Fast and accurate short read alignment with Burrows–Wheeler transform](10_1093_bioinformatics_btp324.md) — BWA demonstrated Burrows-Wheeler-transform indexing for fast read alignment, enabling minimap2's later emphasis on efficient large-scale nucleotide mapping.
+- **enables** ← [The Sequence Alignment/Map format and SAMtools](10_1093_bioinformatics_btp352.md) — SAM/BAM gave minimap2 a standard alignment output and tooling ecosystem for representing and downstream-processing nucleotide mappings.
+- **enables** ← [Gapped BLAST and PSI-BLAST: a new generation of protein database search programs](10_1093_nar_25_17_3389.md) — Gapped BLAST and PSI-BLAST established seed-and-extend alignment with gapped extension, a search paradigm minimap2 builds on for pairwise sequence alignment.
+- **enables** ← [A framework for variation discovery and genotyping using next-generation DNA sequencing data](10_1038_ng_806.md) — The GATK framework defined variant-discovery workflows that depend on accurate read alignments, motivating minimap2's practical role in sequencing pipelines.
 
 
 ## Sources

@@ -6,7 +6,7 @@ openalex_id: https://openalex.org/W2097706568
 year: 1987
 venue: Molecular Biology and Evolution
 authors: Naruya Saitou, M Nei
-citations: 60398
+citations: 60402
 fleming_tier: true
 concepts:
 - Phylogenetic tree

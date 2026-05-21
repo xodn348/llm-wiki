@@ -6,7 +6,7 @@ year: 2011
 venue: Bioinformatics
 authors: Petr Danecek, Adam Auton, Gonçalo R. Abecasis, Cornelis A. Albers, Eric Banks,
   Mark A. DePristo, Robert E. Handsaker, Gerton Lunter
-citations: 17528
+citations: 17533
 fleming_tier: true
 concepts:
 - dbSNP
@@ -38,8 +38,8 @@ SUMMARY: The variant call format (VCF) is a generic format for storing DNA polym
 
 ## Related
 
-- **cite** → [The Sequence Alignment/Map format and SAMtools](10_1093_bioinformatics_btp352.md) — VCFtools complements SAMtools by storing variant calls derived from sequence alignments represented in the SAM/BAM format.
-- **cite** → [A map of human genome variation from population-scale sequencing](10_1038_nature09534.md) — The VCF paper cites the 1000 Genomes pilot because population-scale sequencing motivated a standard format for representing human genetic variants.
+- **cite** → [The Sequence Alignment/Map format and SAMtools](10_1093_bioinformatics_btp352.md) — VCFtools complements SAMtools by standardizing variant-call data downstream of sequence alignments represented in SAM/BAM format.
+- **cite** → [A map of human genome variation from population-scale sequencing](10_1038_nature09534.md) — VCF was motivated by population-scale variant data such as the 1000 Genomes map of human genetic variation.
 
 
 ## Sources
