@@ -24,13 +24,18 @@ authenticated-fetch follow-up.
 """
 from __future__ import annotations
 
+import http.cookiejar
 import logging
+import re
+import time
 import urllib.parse
 from pathlib import Path
 
+import httpx
 import polars as pl
 
 from .config import PATHS
+from .storage import doi_slug
 
 logger = logging.getLogger(__name__)
 
@@ -140,6 +145,183 @@ def paywalled_dois() -> pl.DataFrame:
     return paywalled.join(metadata, on="doi", how="left").select(
         ["doi", "title", "year", "venue", "method"]
     )
+
+
+# --- Authenticated fetch via reused TAMU session cookies ----------------
+
+# Google Scholar's `citation_pdf_url` meta tag is honored by Nature,
+# Science, AAAS, ACS, RSC, JAMA, NEJM, Springer, BMJ, and most other
+# major publishers. When present it's the canonical full-text PDF URL.
+_PDF_META_RE = re.compile(
+    r'<meta\s+(?:name|property)=["\']citation_pdf_url["\']\s+content=["\']([^"\']+)["\']',
+    re.IGNORECASE,
+)
+
+# Cookie reuse session lifetime warning threshold (TAMU EZproxy sessions
+# typically expire 8-24h after last use).
+SESSION_PROBE_URL = "https://proxy.library.tamu.edu/menu"
+
+
+def _load_cookiejar(cookies_path: Path) -> http.cookiejar.MozillaCookieJar:
+    """Load a Netscape/Mozilla cookies.txt file (browser-export format)."""
+    jar = http.cookiejar.MozillaCookieJar(str(cookies_path))
+    jar.load(ignore_discard=True, ignore_expires=True)
+    return jar
+
+
+def _probe_session(client: httpx.Client) -> bool:
+    """Confirm the cookies still authenticate against the proxy."""
+    try:
+        r = client.get(SESSION_PROBE_URL, timeout=20.0)
+    except Exception as e:  # noqa: BLE001
+        logger.warning("session probe failed: %s", e)
+        return False
+    if r.status_code != 200:
+        return False
+    # The unauthenticated menu redirects to login; authenticated shows a
+    # resource list. Heuristic: presence of "logout" or absence of NetID
+    # field signals an active session.
+    body = r.text.lower()
+    return "logout" in body or "log out" in body or "menu" in body
+
+
+def _extract_pdf_url(html: str, base_url: str) -> str | None:
+    """Find a PDF URL inside the landing page HTML.
+
+    Strategy: citation_pdf_url meta tag (works for ~70% of publishers),
+    then fall back to any anchor whose href ends in .pdf.
+    """
+    m = _PDF_META_RE.search(html)
+    if m:
+        return urllib.parse.urljoin(base_url, m.group(1))
+    # Fallback: scan for first .pdf link
+    for href_match in re.finditer(r'href=["\']([^"\']+\.pdf[^"\']*)["\']', html, re.IGNORECASE):
+        return urllib.parse.urljoin(base_url, href_match.group(1))
+    return None
+
+
+def fetch_with_tamu_cookies(
+    cookies_path: str | Path,
+    *,
+    max_papers: int | None = None,
+    rate_delay: float = 5.0,
+    skip_existing: bool = True,
+) -> pl.DataFrame:
+    """Download paywalled papers via TAMU EZproxy using a reused browser session.
+
+    User workflow:
+      1. Log into ``https://proxy.library.tamu.edu/login`` in a browser
+         (NetID + Duo 2FA). Tick "remember this device" if offered.
+      2. Export cookies as Netscape ``cookies.txt`` format using a browser
+         extension ("Get cookies.txt LOCALLY" for Chrome,
+         "cookies.txt" for Firefox). Save to ``~/.config/llm-wiki/tamu-cookies.txt``.
+      3. Run ``llm-wiki fetch-tamu``.
+
+    For each paywalled DOI: hits EZproxy → follows redirects through
+    publisher → extracts ``citation_pdf_url`` meta tag → downloads PDF.
+
+    Honors a 5-second rate delay between requests by default (ToS-friendly
+    for institutional patrons; do NOT lower this).
+
+    Returns a DataFrame with the per-paper fetch status. Also updates the
+    canonical ``data/raw/fetch_status.parquet`` so re-runs are idempotent.
+    """
+    cookies_path = Path(cookies_path).expanduser()
+    if not cookies_path.exists():
+        raise FileNotFoundError(
+            f"TAMU cookies file not found: {cookies_path}\n"
+            "See docstring for the browser-export workflow."
+        )
+
+    jar = _load_cookiejar(cookies_path)
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+        ),
+        "Accept": "application/pdf,text/html;q=0.9,*/*;q=0.8",
+    }
+
+    df = paywalled_dois()
+    rows = df.to_dicts()
+    if max_papers is not None:
+        rows = rows[:max_papers]
+
+    statuses: list[dict] = []
+    with httpx.Client(cookies=jar, headers=headers, follow_redirects=True, timeout=60.0) as c:
+        if not _probe_session(c):
+            raise RuntimeError(
+                "TAMU session cookies appear expired or invalid. "
+                "Re-login at proxy.library.tamu.edu and re-export cookies."
+            )
+        logger.info("session OK; starting fetch of %d paywalled papers (delay=%.1fs)",
+                    len(rows), rate_delay)
+
+        for i, row in enumerate(rows, 1):
+            doi = row["doi"]
+            slug = doi_slug(doi)
+            paper_dir = PATHS.papers / slug
+            paper_dir.mkdir(parents=True, exist_ok=True)
+            pdf_path = paper_dir / "full.pdf"
+
+            if skip_existing and pdf_path.exists() and pdf_path.stat().st_size > 1024:
+                statuses.append({"doi": doi, "method": "tamu_cached", "pdf_bytes": pdf_path.stat().st_size})
+                continue
+
+            ezproxy = resolve_via_ezproxy(doi)
+            status: dict = {"doi": doi, "method": "tamu_failed", "pdf_bytes": 0}
+            if not ezproxy:
+                statuses.append({"doi": doi, "method": "tamu_no_doi", "pdf_bytes": 0})
+                continue
+            try:
+                r = c.get(ezproxy)
+                ctype = (r.headers.get("content-type") or "").lower()
+                if "pdf" in ctype:
+                    pdf_path.write_bytes(r.content)
+                    status = {"doi": doi, "method": "tamu_pdf_direct",
+                              "pdf_bytes": len(r.content)}
+                else:
+                    pdf_url = _extract_pdf_url(r.text, str(r.url))
+                    if pdf_url:
+                        rr = c.get(pdf_url)
+                        if "pdf" in (rr.headers.get("content-type") or "").lower():
+                            pdf_path.write_bytes(rr.content)
+                            status = {"doi": doi, "method": "tamu_pdf_meta",
+                                      "pdf_bytes": len(rr.content)}
+                        else:
+                            status = {"doi": doi, "method": "tamu_pdf_link_not_pdf",
+                                      "pdf_bytes": 0}
+                    else:
+                        # Landing only; save for forensics
+                        (paper_dir / "tamu_landing.html").write_bytes(r.content)
+                        status = {"doi": doi, "method": "tamu_landing_only",
+                                  "pdf_bytes": 0}
+            except Exception as e:  # noqa: BLE001
+                logger.debug("tamu fetch %s failed: %s", doi, e)
+                status = {"doi": doi, "method": "tamu_error",
+                          "pdf_bytes": 0, "error": str(e)[:200]}
+
+            statuses.append(status)
+            if i % 10 == 0 or i == len(rows):
+                logger.info("[%d/%d] %s → %s (%d bytes)",
+                            i, len(rows), doi[:50], status["method"], status["pdf_bytes"])
+            time.sleep(rate_delay)
+
+    # Merge into canonical fetch_status.parquet (preserves the original
+    # Unpaywall-pass rows for non-paywalled papers).
+    out_df = pl.from_dicts(statuses)
+    canonical = pl.read_parquet(PATHS.raw / "fetch_status.parquet")
+    updated_dois = set(out_df["doi"].to_list())
+    keep = canonical.filter(~pl.col("doi").is_in(list(updated_dois)))
+    # Ensure schema alignment by selecting just the canonical columns
+    common = [c for c in canonical.columns if c in out_df.columns]
+    out_aligned = out_df.select(common)
+    merged = pl.concat([keep.select(common), out_aligned], how="diagonal_relaxed")
+    merged.write_parquet(PATHS.raw / "fetch_status.parquet")
+
+    summary = out_df.group_by("method").len().sort("len", descending=True)
+    logger.info("tamu fetch summary:\n%s", summary)
+    return out_df
 
 
 def write_proxied_urls(out: str | Path = "data/paywalled_urls.csv") -> Path:

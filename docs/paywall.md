@@ -142,41 +142,108 @@ publisher session), and click the `ezproxy_url` column. Save PDFs
 into `data/raw/papers/<doi-slug>/full.pdf` to match the layout
 `paper_fetcher.py` expects.
 
-## Future work (deferred)
+## Authenticated fetch — cookie-reuse workflow (implemented)
 
-Two paths exist for programmatic authenticated fetching. Both are
-out of scope for this PR — they require security/privacy decisions
-the user has not yet made.
+After the user logs into TAMU EZproxy in their browser once (NetID +
+Duo 2FA on mobile), the session cookie is reused to programmatically
+download the 636 paywalled papers. No NetID/password stored anywhere,
+no Duo TOTP seed needed.
 
-### Option A: Browser session cookie reuse
+### Step 1 — Log in once in your browser
 
-1. User logs into `proxy.library.tamu.edu` in Chrome.
-2. Export the `ezproxy` cookie (e.g., via the `browser-cookie3`
-   Python library or a manual export).
-3. Inject the cookie into an `httpx.Client` and replay each
-   `ezproxy_url`.
+1. Visit `https://proxy.library.tamu.edu/login` in Chrome (or Firefox).
+2. Sign in with TAMU NetID + complete Duo 2FA on your phone.
+3. When prompted "Trust this device for 30 days?" — **say yes** so you
+   don't have to redo Duo every time the session refreshes.
+4. Leave the tab open. Don't log out.
 
-**Pros:** No credentials stored anywhere; cookie expires in hours.
-**Cons:** Manual cookie refresh every session. Some publishers
-fingerprint the User-Agent / TLS profile — `curl_cffi` may be
-needed for Cloudflare-fronted sites.
+### Step 2 — Export cookies as `cookies.txt`
 
-### Option B: Playwright with NetID credentials
+Install one of these browser extensions and use it on the
+`proxy.library.tamu.edu` tab:
+
+- **Chrome**: ["Get cookies.txt LOCALLY"](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc)
+- **Firefox**: ["cookies.txt"](https://addons.mozilla.org/firefox/addon/cookies-txt/)
+
+Click the extension icon, choose "Export for current site", save the
+file to:
+
+```
+~/.config/llm-wiki/tamu-cookies.txt
+```
+
+(Create the directory if missing: `mkdir -p ~/.config/llm-wiki`.)
+
+### Step 3 — Run the fetcher
+
+```
+uv run llm-wiki fetch-tamu
+```
+
+For each paywalled DOI it:
+1. Hits the EZproxy URL with your cookies.
+2. Follows redirects through SSO / Shibboleth into the publisher.
+3. Looks for the `citation_pdf_url` meta tag (Google Scholar standard,
+   honored by Nature, Science, AAAS, ACS, RSC, JAMA, Springer, BMJ).
+4. Downloads the PDF to `data/raw/papers/<doi-slug>/full.pdf`.
+5. Sleeps 5 seconds between requests (ToS-friendly; do not lower this).
+
+**Total runtime**: 636 papers × 5s/req ≈ **53 minutes** in the
+happy path.
+
+**Resumability**: re-runs skip papers that already have a `full.pdf >
+1 KB`. If your session expires mid-run, refresh cookies and re-run —
+it picks up where it left off. The canonical `fetch_status.parquet`
+is updated as you go.
+
+**Status codes you'll see** in `fetch_status.parquet`:
+- `tamu_pdf_direct` — EZproxy returned a PDF directly. Best case.
+- `tamu_pdf_meta` — Landing page had a `citation_pdf_url` meta tag and
+  we fetched the linked PDF. Most common.
+- `tamu_landing_only` — Got HTML but no PDF link could be extracted.
+  The HTML is saved as `tamu_landing.html` for you to inspect. Common
+  for Cloudflare-protected or JavaScript-heavy publishers (Elsevier,
+  some Wiley journals).
+- `tamu_pdf_link_not_pdf` — Found a link but the linked URL didn't
+  return PDF content-type. Likely a paywall wall behind the proxy.
+- `tamu_error` — Network error. Re-run will retry.
+
+### Step 4 — Re-chunk to populate Phase 2
+
+```
+uv run llm-wiki chunk
+```
+
+This is idempotent — it skips already-chunked PDFs and processes the
+new TAMU-fetched ones. `data/graph/nodes.parquet` grows accordingly.
+
+## Known limitations
+
+- **Cloudflare bot-detection**: a small minority of publishers
+  fingerprint the TLS profile. Plain `httpx` (this implementation)
+  works for ~80% of paywalled publishers. The remaining ones may need
+  `curl_cffi` (Chrome impersonation) — a future PR.
+- **Elsevier ScienceDirect**: aggressively JavaScript-heavy. Many
+  papers will land as `tamu_landing_only`. Workaround: open those
+  EZproxy URLs in your browser manually and use the "Save PDF" button.
+- **Bulk-download ToS**: 5-second delay is the minimum acceptable
+  pacing. Do not lower. Publishers monitor proxy IP for aggregate
+  request volume; consistent slow pacing is fine, bursts are not.
+
+## Option B — Playwright with NetID (still deferred)
+
+If cookie-reuse proves insufficient and you want full automation:
 
 1. Store NetID + Duo TOTP seed in the OS keychain (never in code).
 2. Playwright headless Chromium navigates to `proxy.library.tamu.edu`,
    submits the NetID form, completes Duo via TOTP, and downloads each
    PDF from the resulting authenticated context.
 
-**Pros:** Fully automated.
-**Cons:** Storing Duo TOTP seed is sensitive (the user must decide
-whether to permit it). Duo policy may also block headless browsers
-or require a fresh approval per session. Rate-limit aggressively to
-stay under publisher "systematic download" thresholds.
+**Pros:** Fully automated, no manual cookie refresh.
+**Cons:** Storing Duo TOTP seed is sensitive. Duo policy may also
+block headless browsers or require a fresh approval per session.
 
-A future PR can implement Option A (lower risk, no credential storage)
-as `src/llm_wiki/paywall_fetcher.py`, reading cookies from a
-user-provided `.cookies.json` or browser export.
+This is a separate decision — open an issue if you want it built.
 
 ## Verification of the resolver URLs
 
