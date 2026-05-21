@@ -33,8 +33,11 @@ New in v1.6:
   biases).
 - [**Paywall workaround**](paywall.md) — TAMU EZproxy / OpenURL /
   LibKey URLs for the 636 paywalled DOIs (`data/paywalled_urls.csv`).
-- **Phase 2 kicked off** — 113 OA PDFs chunked via pypdf fallback
-  → 6,580 leaf nodes in `data/graph/nodes.parquet`.
+- **Phase 2 progress** — Multi-source OA fetcher (Semantic Scholar +
+  CORE) added **85 more PDFs** on top of Unpaywall's 113, total
+  **198 / 848 papers (23.3%) chunked** → **11,349 leaf nodes** in
+  `data/graph/nodes.parquet`. 650 still PDF-missing (540 not in any
+  public OA index, 110 only HTML landing pages found).
 
 Also shipping: an **Obsidian vault** (`obsidian-vault/` in the repo) —
 848 paper notes + 293 concept hub notes linked via `[[wikilinks]]`,
