@@ -145,8 +145,9 @@ def paywall(out: str = "data/paywalled_urls.csv") -> None:
 def fetch_oa(
     max_papers: int | None = typer.Option(None, "--max-papers"),
     delay: float = typer.Option(1.0, "--delay"),
-    sources: str = typer.Option("s2,ia,core", "--sources",
-                                help="Comma list of: s2, ia, core"),
+    sources: str = typer.Option("s2,core", "--sources",
+                                help="Comma list of: s2, ia, core. "
+                                     "(ia disabled by default — endpoints unreachable.)"),
 ) -> None:
     """17. Try free OA sources (Semantic Scholar / IA Scholar / CORE) for paywalled DOIs."""
     from . import oa_multi_fetcher

@@ -33,7 +33,11 @@ from .storage import doi_slug
 logger = logging.getLogger(__name__)
 
 S2_BASE = "https://api.semanticscholar.org/graph/v1/paper"
-IA_SCHOLAR_BASE = "https://scholar.archive.org/search"
+# Both IA Scholar paths are currently unreachable from our network:
+# - scholar.archive.org/search?format=json → 405 Method Not Allowed
+# - api.fatcat.wiki/v0/release/lookup     → connect timeout
+# Function kept for when one comes back; not included in default sources.
+FATCAT_BASE = "https://api.fatcat.wiki/v0/release/lookup"
 CORE_BASE = "https://api.core.ac.uk/v3/search/outputs"
 
 
@@ -66,27 +70,39 @@ def _s2_pdf_url(doi: str, c: httpx.Client) -> str | None:
     return pdf.get("url")
 
 
-# --- Source 2: Internet Archive Scholar ---------------------------------
+# --- Source 2: fatcat (Internet Archive Scholar backend) ----------------
 
-# scholar.archive.org search returns JSON with hits containing
-# `fulltext.access_url` for indexed PDFs.
+# fatcat lookup returns a release with `files` (each `urls: [{url, rel}]`).
+# Pick the first URL that looks like a PDF or sits on a web-archive host.
 
 def _ia_scholar_pdf_url(doi: str, c: httpx.Client) -> str | None:
     try:
         r = c.get(
-            IA_SCHOLAR_BASE,
-            params={"q": f'doi:"{doi}"', "format": "json"},
+            FATCAT_BASE,
+            params={"doi": doi.lower(), "expand": "files", "hide": "abstracts,refs"},
         )
+        if r.status_code == 404:
+            return None
         r.raise_for_status()
         data = r.json()
     except Exception as e:  # noqa: BLE001
-        logger.debug("ia_scholar %s failed: %s", doi, e)
+        logger.debug("fatcat %s failed: %s", doi, e)
         return None
-    for hit in data.get("results", []):
-        full = hit.get("fulltext") or {}
-        url = full.get("access_url")
-        if url:
-            return url
+    for f in data.get("files") or []:
+        mimetype = (f.get("mimetype") or "").lower()
+        urls = f.get("urls") or []
+        is_pdf = "pdf" in mimetype or any(
+            (u.get("url") or "").lower().endswith(".pdf") for u in urls
+        )
+        if not is_pdf:
+            continue
+        # Prefer web.archive.org / archive.org mirrors; they are permanent.
+        for u in urls:
+            url = u.get("url") or ""
+            if "archive.org" in url:
+                return url
+        if urls:
+            return urls[0].get("url")
     return None
 
 
