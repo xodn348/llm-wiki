@@ -46,12 +46,14 @@ through an LLM tier filter.
 | LLM tier filter | Codex judges Fleming criteria, batch=20 | ~30–50 % pass rate |
 | Manual review | Spot-check rejections + missed classics | — |
 
-**Current state**: 4 of 9 sources wired → 3,155 candidates → **848 confirmed
-Fleming-tier** (96 prior + 752 from extended filter, ~37% pass rate over
-the full openalex pool). Right at the top of the 600 ± 200 target. Five
-other seed sources (Van Noorden Top 100, NIH Landmarks, APS Centennial,
-Garfield Classics, Wikipedia Year in Science) still pending — those
-would mostly add pre-1950 coverage that OpenAlex misses.
+**Current state**: **9 of 9 sources wired → 3,392 candidates → 848 confirmed
+Fleming-tier**. All seed sources active: OpenAlex (classics + recent),
+Nobel laureates, Karpathy/Awesome-DL, Van Noorden Top 100, NIH
+Landmarks, APS Centennial, Garfield Classics (host down at integration
+— stub returns []), Wikipedia "Important publications in X". Garfield's
+upenn.edu archive is intermittently offline; falls back gracefully.
+**237 new candidates** from the 5 newly-wired sources are still
+unjudged — next `llm-wiki filter` run will append to core.
 
 **Definition of done**: 600 ± 200 papers in `data/raw/core.parquet`,
 each with OpenAlex metadata enriched, each with a paper page.
@@ -69,8 +71,11 @@ a chunk-level graph linking the corpus.
 | Concept overlay | OpenAlex Concepts + MeSH | already wired |
 
 **Current state**: paper-level cite + enables done — **1,438 edges, all
-labeled** (929 cite + 509 enables). Chunk-level needs PDF fetch →
-PageIndex pass → tag → graph rebuild.
+labeled** (929 cite + 509 enables). **129 PDFs cached** via Unpaywall
+OA (282 MB local, gitignored) — Phase 2 chunk-level kick-off material.
+636 papers paywalled / no OA copy. Chunk-level still needs PageIndex
+pass → tag → graph rebuild on the 129 OA-available papers (the 636
+paywalled stay at paper-level only).
 
 **Definition of done**: chunk-level graph with ≥3 edge types per paper
 on average, every edge labeled.
@@ -82,11 +87,11 @@ Make the wiki navigable. Decide on ontology depth here.
 | Sub-task | Default | Decision |
 |---------|---------|---------|
 | Static wiki | Markdown + MkDocs Material | ✅ already deployed |
-| Topic / lineage pages | LLM-aggregated cluster summaries | to do |
+| Topic / lineage pages | LLM-aggregated cluster summaries | ✅ v1.5 — 15 topics, 11 lineages |
 | UMAP map | 2D map of papers, year-coloured | ✅ already deployed |
 | Cytoscape graph | interactive, hover for labels | ✅ already deployed |
 | Full-text search | MkDocs built-in `search` plugin | ✅ |
-| Concept search | DuckDB query over `metadata.parquet` concepts | to do |
+| Concept search | DuckDB query over `metadata.parquet` concepts | ✅ v1.5 — `docs/concepts.md`, 3,273 concepts |
 | **Ontology** | OpenAlex Concepts + MeSH as overlay | **open** — adopt a formal ontology (e.g. publish JSON-LD with `schema.org/CreativeWork` + custom predicates) only if it pays for itself in downstream interop |
 
 **Definition of done**: a visitor can land on the site and either browse
@@ -116,15 +121,22 @@ their own corpus.
 - Exhaustive Fleming-tier judgments — LLM filter + manual spot-check is
   the v1 quality bar
 
-## Current state — 2026-05-20
+## Current state — 2026-05-21
 
-- v1.4 deployed at https://xodn348.github.io/llm-wiki/
-- **848 Fleming-tier papers**, paper-level graph with **1,438 labeled edges**
-- **All 848 papers** have full LLM "why this mattered" prose
+- v1.5 deployed at https://xodn348.github.io/llm-wiki/
+- **848 Fleming-tier papers** with full LLM "Why this mattered" prose,
+  paper-level graph with **1,438 labeled edges**
+- All **9 seed sources wired** → 3,392 candidates (237 newly added,
+  not-yet-judged by tier filter — next pass will append to core)
+- New browse surfaces: **15 topic pages** (clustered by OpenAlex
+  top-level concept), **11 lineage pages** (longest paths in the
+  enables-subgraph), **concept browser** over 3,273 OpenAlex concepts
+  (`docs/concepts.md`)
+- **129 PDFs cached** via Unpaywall OA (282 MB, gitignored), 83 HTML
+  landing pages, 636 paywalled — Phase 2 chunk-level can now start
 - Obsidian vault (`obsidian-vault/`) shipped — 848 paper notes +
   293 concept hubs, `[[wikilinks]]` for graph browsing
 - LLM backend: Codex CLI (free)
-- Next action: Phase 2 (PDF fetch → PageIndex → chunk-level graph).
-  Optional Phase 1 polish: wire the 5 remaining seed sources
-  (Van Noorden, NIH Landmarks, APS Centennial, Garfield Classics,
-  Wikipedia Year-in-Science).
+- Next action: (a) `llm-wiki filter` over the 237 newly-added
+  candidates, (b) Phase 2 — PageIndex on the 129 OA PDFs →
+  chunk-level edges (builds-on / same-method / contradicts).

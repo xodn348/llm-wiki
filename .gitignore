@@ -34,3 +34,6 @@ site/
 
 # Local pipeline backups
 *.parquet.bak
+
+# Claude Code worktree agents
+.claude/

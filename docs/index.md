@@ -7,17 +7,29 @@
 
 [karp]: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
 
-## v1.4 status
+## v1.5 status
 
 The wiki indexes **848 papers** confirmed Fleming-tier by an LLM filter
-(Codex / GPT-5) over 2,248 candidates from OpenAlex's high-citation
-slice (`cited_by_count > 10000 && year < 2010` ∪ `cited_by_count >
-5000 && year ≥ 2010`). **All 848 papers** now carry an LLM-written
-*Why this mattered* section grounded in the abstract and historical
-context.
+(Codex / GPT-5) over 3,392 candidates from nine authoritative seed
+sources (OpenAlex high-citation slice, Nobel laureates, Karpathy's ML
+reading list, Van Noorden Top 100, NIH Landmarks, APS Centennial,
+Garfield Citation Classics, Wikipedia "Important publications in X").
+**All 848 papers** carry an LLM-written *Why this mattered* section
+grounded in the abstract and historical context.
 
 Paper-level graph: **1,438 edges** (929 cite + 509 enables), every edge
 carries a one-sentence LLM "why related" label.
+
+New in v1.5:
+
+- [**Topics**](topic/index.md) — papers clustered by OpenAlex top-level
+  concept, each topic with an LLM 2-paragraph synthesis.
+- [**Lineages**](lineage/index.md) — longest chains in the `enables`
+  subgraph, walked step-by-step with grounded prose.
+- [**Concepts**](concepts.md) — sortable, filterable browser over all
+  3,273 OpenAlex Concepts present in the corpus, click-to-expand papers.
+- **PDF corpus** — 129 open-access PDFs cached locally (282 MB,
+  gitignored), seeding Phase 2 chunk-level work. 636 remain paywalled.
 
 Also shipping: an **Obsidian vault** (`obsidian-vault/` in the repo) —
 848 paper notes + 293 concept hub notes linked via `[[wikilinks]]`,
@@ -41,24 +53,29 @@ Examples in the corpus:
 
 ## Browse
 
-- [Spec](superpowers/specs/2026-05-14-llm-wiki-design.md) — full design
 - [Papers](paper/index.md) — every Fleming-tier paper page
+- [Topics](topic/index.md) — by OpenAlex top-level concept
+- [Lineages](lineage/index.md) — chains of `enables` edges
+- [Concepts](concepts.md) — searchable concept browser
+- [Spec](superpowers/specs/2026-05-14-llm-wiki-design.md) — full design
 
 ## How papers are picked
 
 Three-stage funnel:
 
-1. **Authoritative seed** — OpenAlex (`cited_by_count > 5,000`) + Karpathy
-   reading list / Awesome ML Papers. ~3,155 candidates from 4 sources.
-2. **Heuristic shortlist** — top by citation; trimmed to 200 for v1.
+1. **Authoritative seed** — 9 sources: OpenAlex (`cited_by_count > 10k
+   pre-2010` ∪ `> 5k post-2010`), Karpathy / Awesome-DL reading lists,
+   Nobel laureates, Van Noorden Top 100, NIH Landmarks, APS Centennial,
+   Garfield Citation Classics, Wikipedia "Important publications in X".
+   **3,392 candidates total**.
+2. **Dedup** — by DOI primary, fuzzy `(title, year)` secondary. Cross-
+   source corroboration is preserved in the merged `source_tag`.
 3. **LLM tier filter** — Codex judges each on Fleming criteria
    (founded a field / caused paradigm shift / enabled breakthroughs /
-   universally taught). 96 of 200 confirmed.
+   universally taught). **848 confirmed**, 1,400 rejected (~37% pass
+   rate over the OpenAlex pool).
 
-The same pipeline scales to all 3,155 candidates and to `~600` core
-papers as more sources (Nobel references, NIH Landmarks, APS Centennial,
-Wikipedia "Year in science") are wired in. See [the spec][spec] for
-details.
+See [the spec][spec] for details.
 
 [spec]: superpowers/specs/2026-05-14-llm-wiki-design.md
 

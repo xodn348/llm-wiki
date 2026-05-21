@@ -56,12 +56,19 @@ nav:
   - Home: index.md
   - UMAP map: viz/map.html
   - Chunk graph: viz/graph.html
-  - Spec: superpowers/specs/2026-05-14-llm-wiki-design.md
   - Papers: paper/index.md
+  - Topics: topic/index.md
+  - Lineages: lineage/index.md
+  - Concepts: concepts.md
+  - Spec: superpowers/specs/2026-05-14-llm-wiki-design.md
 
 docs_dir: docs
 
 not_in_nav: |
   paper/*.md
   !paper/index.md
+  topic/*.md
+  !topic/index.md
+  lineage/*.md
+  !lineage/index.md
 
