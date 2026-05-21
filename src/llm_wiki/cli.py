@@ -155,6 +155,50 @@ def fetch_oa(
     oa_multi_fetcher.fetch_oa_multi(max_papers=max_papers, rate_delay=delay, sources=srcs)
 
 
+@app.command(name="fetch-phase-a")
+def fetch_phase_a(
+    max_papers: int | None = typer.Option(None, "--max-papers"),
+    delay: float = typer.Option(1.0, "--delay"),
+    sources: str = typer.Option(
+        "europepmc,arxiv,biorxiv,crossref,template,doi_meta", "--sources",
+        help="Phase-A resolvers in priority order",
+    ),
+) -> None:
+    """18. Six more OA sources: Europe PMC / arXiv / bioRxiv / Crossref / publisher templates / DOI meta."""
+    from . import oa_phase_a
+    srcs = tuple(s.strip() for s in sources.split(",") if s.strip())
+    oa_phase_a.fetch_phase_a(max_papers=max_papers, rate_delay=delay, sources=srcs)
+
+
+@app.command(name="fetch-phase-c")
+def fetch_phase_c(
+    max_papers: int | None = typer.Option(None, "--max-papers"),
+    concurrency: int = typer.Option(20, "--concurrency"),
+) -> None:
+    """20. Async batched fetcher: Crossref bulk + Europe PMC + OpenAIRE + OSTI + templates + DOI meta."""
+    from . import oa_phase_c
+    oa_phase_c.fetch_phase_c(max_papers=max_papers, concurrency=concurrency)
+
+
+@app.command(name="fetch-phase-b")
+def fetch_phase_b(
+    max_papers: int | None = typer.Option(None, "--max-papers"),
+    delay: float = typer.Option(2.0, "--delay"),
+    sources: str = typer.Option(
+        "scihub,annas", "--sources",
+        help="Phase-B (last-resort) resolvers: scihub, annas",
+    ),
+) -> None:
+    """19. Last-resort gray-area sources (Sci-Hub / Anna's Archive SciDB).
+
+    For personal academic research only; do not redistribute. Pacing
+    defaults to 2 seconds to stay polite to the mirror hosts.
+    """
+    from . import oa_phase_b
+    srcs = tuple(s.strip() for s in sources.split(",") if s.strip())
+    oa_phase_b.fetch_phase_b(max_papers=max_papers, rate_delay=delay, sources=srcs)
+
+
 @app.command(name="fetch-tamu")
 def fetch_tamu(
     cookies: str | None = typer.Option(None, "--cookies",
