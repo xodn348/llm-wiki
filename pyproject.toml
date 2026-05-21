@@ -31,6 +31,7 @@ dependencies = [
     "networkx>=3.2",
     "markdownify>=0.13",
     "pypdf>=6.12.0",
+    "browser-cookie3>=0.20.1",
 ]
 
 [project.optional-dependencies]

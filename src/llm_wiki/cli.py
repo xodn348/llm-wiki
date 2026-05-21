@@ -143,22 +143,25 @@ def paywall(out: str = "data/paywalled_urls.csv") -> None:
 
 @app.command(name="fetch-tamu")
 def fetch_tamu(
-    cookies: str = typer.Option("~/.config/llm-wiki/tamu-cookies.txt", "--cookies",
-                                help="Path to Netscape cookies.txt exported from your TAMU-authenticated browser"),
+    cookies: str | None = typer.Option(None, "--cookies",
+                                       help="Optional: path to a Netscape cookies.txt. "
+                                            "Omit to auto-import from your browser."),
+    browser: str | None = typer.Option(None, "--browser",
+                                       help="chrome|firefox|safari|edge|brave (auto-detect if omitted)"),
     max_papers: int | None = typer.Option(None, "--max-papers"),
     delay: float = typer.Option(5.0, "--delay",
                                 help="Seconds between requests (ToS-friendly; do not lower below 5)"),
 ) -> None:
-    """16. Download paywalled papers via TAMU EZproxy using your browser cookies.
+    """16. Download paywalled papers via TAMU EZproxy using your browser session.
 
     Workflow:
-      1. Log into proxy.library.tamu.edu in a browser (NetID + Duo).
-      2. Export cookies (Chrome: 'Get cookies.txt LOCALLY' extension).
-      3. Save to ~/.config/llm-wiki/tamu-cookies.txt
-      4. Run this command.
+      1. Log into proxy.library.tamu.edu in your browser (NetID + Duo).
+      2. Run this command. Cookies are auto-imported from your browser —
+         no manual export needed.
     """
     from . import paywall_tamu
-    paywall_tamu.fetch_with_tamu_cookies(cookies, max_papers=max_papers, rate_delay=delay)
+    paywall_tamu.fetch_with_tamu_cookies(cookies, browser=browser,
+                                          max_papers=max_papers, rate_delay=delay)
 
 
 @app.command()

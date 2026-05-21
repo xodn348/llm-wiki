@@ -157,27 +157,30 @@ no Duo TOTP seed needed.
    don't have to redo Duo every time the session refreshes.
 4. Leave the tab open. Don't log out.
 
-### Step 2 — Export cookies as `cookies.txt`
-
-Install one of these browser extensions and use it on the
-`proxy.library.tamu.edu` tab:
-
-- **Chrome**: ["Get cookies.txt LOCALLY"](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc)
-- **Firefox**: ["cookies.txt"](https://addons.mozilla.org/firefox/addon/cookies-txt/)
-
-Click the extension icon, choose "Export for current site", save the
-file to:
-
-```
-~/.config/llm-wiki/tamu-cookies.txt
-```
-
-(Create the directory if missing: `mkdir -p ~/.config/llm-wiki`.)
-
-### Step 3 — Run the fetcher
+### Step 2 — Run the fetcher (auto-imports cookies)
 
 ```
 uv run llm-wiki fetch-tamu
+```
+
+That's it. `browser-cookie3` reads cookies directly from your installed
+browser's cookie store (Chrome / Firefox / Safari / Edge / Brave) and
+filters to TAMU domains. No manual export needed.
+
+On macOS Chrome the first run prompts for one **Keychain access**
+permission ("`Python` wants to use Chrome Safe Storage to decrypt
+cookies") — click Always Allow.
+
+If you'd rather export cookies manually (e.g. running on a server, or
+the browser isn't on this machine):
+
+- **Chrome**: ["Get cookies.txt LOCALLY"](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) extension → export for proxy.library.tamu.edu
+- **Firefox**: ["cookies.txt"](https://addons.mozilla.org/firefox/addon/cookies-txt/) extension
+- Save anywhere, then: `uv run llm-wiki fetch-tamu --cookies path/to/cookies.txt`
+
+To force a specific browser (when multiple are installed):
+```
+uv run llm-wiki fetch-tamu --browser firefox
 ```
 
 For each paywalled DOI it:

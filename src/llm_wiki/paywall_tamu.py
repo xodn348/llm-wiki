@@ -169,6 +169,50 @@ def _load_cookiejar(cookies_path: Path) -> http.cookiejar.MozillaCookieJar:
     return jar
 
 
+def _load_browser_cookies(browser: str | None = None) -> http.cookiejar.CookieJar:
+    """Auto-import cookies from the user's installed browser via browser-cookie3.
+
+    No manual export required — reads directly from Chrome/Firefox/Safari
+    cookie store on disk. On macOS Chrome this prompts for keychain access
+    once. Filters to TAMU EZproxy + Shibboleth + publisher session domains.
+    """
+    import browser_cookie3
+    from collections.abc import Callable
+
+    loaders: dict[str, Callable] = {
+        "chrome": browser_cookie3.chrome,
+        "firefox": browser_cookie3.firefox,
+        "safari": browser_cookie3.safari,
+        "edge": browser_cookie3.edge,
+        "brave": browser_cookie3.brave,
+    }
+
+    if browser:
+        if browser not in loaders:
+            raise ValueError(f"unknown browser {browser!r}; pick one of {list(loaders)}")
+        try:
+            return loaders[browser](domain_name="tamu.edu")
+        except Exception as e:  # noqa: BLE001
+            raise RuntimeError(f"{browser} cookie import failed: {e}") from e
+
+    # Try each browser until one works
+    last_error = None
+    for name, loader in loaders.items():
+        try:
+            jar = loader(domain_name="tamu.edu")
+            if any(True for _ in jar):
+                logger.info("loaded TAMU cookies from %s", name)
+                return jar
+        except Exception as e:  # noqa: BLE001
+            last_error = e
+            logger.debug("%s cookie import failed: %s", name, e)
+            continue
+    raise RuntimeError(
+        f"no browser had TAMU cookies (last error: {last_error}). "
+        "Log into proxy.library.tamu.edu in your browser first."
+    )
+
+
 def _probe_session(client: httpx.Client) -> bool:
     """Confirm the cookies still authenticate against the proxy."""
     try:
@@ -201,21 +245,25 @@ def _extract_pdf_url(html: str, base_url: str) -> str | None:
 
 
 def fetch_with_tamu_cookies(
-    cookies_path: str | Path,
+    cookies_path: str | Path | None = None,
     *,
+    browser: str | None = None,
     max_papers: int | None = None,
     rate_delay: float = 5.0,
     skip_existing: bool = True,
 ) -> pl.DataFrame:
     """Download paywalled papers via TAMU EZproxy using a reused browser session.
 
-    User workflow:
-      1. Log into ``https://proxy.library.tamu.edu/login`` in a browser
+    User workflow (simplest path — no manual export):
+      1. Log into ``https://proxy.library.tamu.edu/login`` in your browser
          (NetID + Duo 2FA). Tick "remember this device" if offered.
-      2. Export cookies as Netscape ``cookies.txt`` format using a browser
-         extension ("Get cookies.txt LOCALLY" for Chrome,
-         "cookies.txt" for Firefox). Save to ``~/.config/llm-wiki/tamu-cookies.txt``.
-      3. Run ``llm-wiki fetch-tamu``.
+      2. Run ``llm-wiki fetch-tamu`` — it auto-imports cookies from your
+         installed browser (Chrome / Firefox / Safari / Edge / Brave).
+         On macOS Chrome you'll get one Keychain prompt for cookie access.
+
+    Optional: pass ``--cookies path/to/cookies.txt`` if you'd rather export
+    a Netscape cookies.txt manually via a browser extension. The file
+    overrides browser auto-import.
 
     For each paywalled DOI: hits EZproxy → follows redirects through
     publisher → extracts ``citation_pdf_url`` meta tag → downloads PDF.
@@ -226,14 +274,17 @@ def fetch_with_tamu_cookies(
     Returns a DataFrame with the per-paper fetch status. Also updates the
     canonical ``data/raw/fetch_status.parquet`` so re-runs are idempotent.
     """
-    cookies_path = Path(cookies_path).expanduser()
-    if not cookies_path.exists():
-        raise FileNotFoundError(
-            f"TAMU cookies file not found: {cookies_path}\n"
-            "See docstring for the browser-export workflow."
-        )
-
-    jar = _load_cookiejar(cookies_path)
+    if cookies_path:
+        path = Path(cookies_path).expanduser()
+        if not path.exists():
+            raise FileNotFoundError(
+                f"TAMU cookies file not found: {path}\n"
+                "Omit --cookies to auto-import from your browser instead."
+            )
+        jar: http.cookiejar.CookieJar = _load_cookiejar(path)
+        logger.info("loaded cookies from file %s", path)
+    else:
+        jar = _load_browser_cookies(browser=browser)
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
