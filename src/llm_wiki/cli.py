@@ -135,6 +135,13 @@ def concepts() -> None:
 
 
 @app.command()
+def paywall(out: str = "data/paywalled_urls.csv") -> None:
+    """15. Generate proxied URLs for paywalled papers via TAMU."""
+    from . import paywall_tamu
+    paywall_tamu.write_proxied_urls(out)
+
+
+@app.command()
 def all_(skip_llm: bool = False) -> None:  # noqa: PLR0913
     """Run the entire pipeline."""
     seed_assembler.assemble()
