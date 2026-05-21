@@ -115,16 +115,23 @@ def obsidian() -> None:
 
 @app.command()
 def topic() -> None:
-    """11. Generate topic cluster pages from OpenAlex concepts."""
+    """12. Generate topic cluster pages from OpenAlex concepts."""
     from . import topic_pages
     topic_pages.generate_topics()
 
 
 @app.command()
 def lineage() -> None:
-    """12. Generate lineage chain pages from enables edges."""
+    """13. Generate lineage chain pages from enables edges."""
     from . import topic_pages
     topic_pages.generate_lineages()
+
+
+@app.command()
+def concepts() -> None:
+    """14. Generate the concept browser page from OpenAlex concepts."""
+    from . import concept_search
+    concept_search.generate_concept_browser()
 
 
 @app.command()
