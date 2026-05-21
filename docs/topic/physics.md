@@ -1,0 +1,80 @@
+---
+title: Physics
+papers: 62
+top_concept_id: https://openalex.org/C121332964
+---
+
+# Physics
+
+_62 Fleming-tier papers._
+
+## Synthesis
+
+Taken together, these Fleming-tier physics papers trace a century-long movement from classical and phenomenological description toward quantum, statistical, computational, and information-theoretic control of matter, fields, and spacetime. One dominant lineage runs through many-electron theory: Hartree-Fock, density-functional theory, pseudopotentials, projector augmented waves, quantum Monte Carlo, molecular dynamics thermostats, basis sets, and hybrid functionals turned quantum mechanics into a practical engine for chemistry, materials science, and condensed-matter prediction. A second lineage concerns collective and emergent behavior: superconductivity, Anderson localization, polymer scaling, fractals, turbulence, granular media, graphene, transition-metal dichalcogenides, and magic-angle superlattices. These papers collectively shifted physics from isolated particles and idealized media toward phases, correlations, topology, disorder, and engineered quantum materials.
+
+A parallel set of papers marks physics’ expansion in scale and ontology. Bell’s theorem and quantum teleportation recast quantum theory as a theory of nonclassical information, while Hawking radiation, AdS/CFT, the Higgs-boson observations, gravitational-wave detections, and cosmological surveys tied particle physics, gravitation, and astronomy into a common empirical framework. The supernova, WMAP, Planck, SDSS, 2MASS, WISE, and Gaia papers represent the precision-cosmology and survey-science turn, in which large instruments and statistical inference define the universe’s parameters and history. Optics and photonics form another bridge: Mie scattering, inhibited spontaneous emission, orbital angular momentum of light, negative-index electrodynamics, generalized refraction, and metasurfaces connect fundamental electromagnetism to devices. The cluster also reaches adjacent fields, notably computation, chemistry, climate modeling, biology, and philosophy of science, where simulation, morphogenesis, circulation models, and Kuhn’s paradigm framework became part of physics’ broader intellectual infrastructure.
+
+## Papers
+
+- 1908 — [Beiträge zur Optik trüber Medien, speziell kolloidaler Metallösungen](../paper/10_1002_andp_19083300302.md)
+- 1934 — [Note on an Approximation Treatment for Many-Electron Systems](../paper/10_1103_physrev_46_618.md)
+- 1952 — [The chemical basis of morphogenesis](../paper/10_1098_rstb_1952_0012.md)
+- 1953 — [Equation of State Calculations by Fast Computing Machines](../paper/10_1063_1_1699114.md)
+- 1957 — [Theory of Superconductivity](../paper/10_1103_physrev_108_1175.md)
+- 1958 — [Absence of Diffusion in Certain Random Lattices](../paper/10_1103_physrev_109_1492.md)
+- 1961 — [Detailed Balance Limit of Efficiency of<i>p-n</i>Junction Solar Cells](../paper/10_1063_1_1736034.md)
+- 1961 — [Effects of Configuration Interaction on Intensities and Phase Shifts](../paper/10_1103_physrev_124_1866.md)
+- 1963 — [<i>The Structure of Scientific Revolutions</i>](../paper/10_1063_1_3050879.md)
+- 1963 — [GENERAL CIRCULATION EXPERIMENTS WITH THE PRIMITIVE EQUATIONS](../paper/10_1175_1520_0493_1963_091_0099_gcewtp_2_3_co_2.md)
+- 1964 — [On the Einstein Podolsky Rosen paradox](../paper/10_1103_physicsphysiquefizika_1_195.md)
+- 1965 — [Self-Consistent Equations Including Exchange and Correlation Effects](../paper/10_1103_physrev_140_a1133.md)
+- 1968 — [THE ELECTRODYNAMICS OF SUBSTANCES WITH SIMULTANEOUSLY NEGATIVE VALUES OF $\epsilon$ AND μ](../paper/10_1070_pu1968v010n04abeh003699.md)
+- 1974 — [The numerical computation of turbulent flows](../paper/10_1016_0045_7825_74_90029_2.md)
+- 1975 — [Particle creation by black holes](../paper/10_1007_bf02345020.md)
+- 1976 — [Special points for Brillouin-zone integrations](../paper/10_1103_physrevb_13_5188.md)
+- 1979 — [A discrete numerical model for granular assemblies](../paper/10_1680_geot_1979_29_1_47.md)
+- 1980 — [Ground State of the Electron Gas by a Stochastic Method](../paper/10_1103_physrevlett_45_566.md)
+- 1980 — [Self-consistent molecular orbital methods. XX. A basis set for correlated wave functions](../paper/10_1063_1_438955.md)
+- 1981 — [Scaling concepts in polymer physics](../paper/10_1016_0032_3861_81_90183_x.md)
+- 1983 — [<i>The Fractal Geometry of Nature</i>](../paper/10_1119_1_13295.md)
+- 1984 — [A unified formulation of the constant temperature molecular dynamics methods](../paper/10_1063_1_447334.md)
+- 1984 — [A molecular dynamics method for simulations in the canonical ensemble](../paper/10_1080_00268978400101201.md)
+- 1985 — [Canonical dynamics: Equilibrium phase-space distributions](../paper/10_1103_physreva_31_1695.md)
+- 1985 — [Unified Approach for Molecular Dynamics and Density-Functional Theory](../paper/10_1103_physrevlett_55_2471.md)
+- 1986 — [Density-functional approximation for the correlation energy of the inhomogeneous electron gas](../paper/10_1103_physrevb_33_8822.md)
+- 1987 — [Inhibited Spontaneous Emission in Solid-State Physics and Electronics](../paper/10_1103_physrevlett_58_2059.md)
+- 1988 — [Development of the Colle-Salvetti correlation-energy formula into a functional of the electron density](../paper/10_1103_physrevb_37_785.md)
+- 1988 — [Density-functional exchange-energy approximation with correct asymptotic behavior](../paper/10_1103_physreva_38_3098.md)
+- 1990 — [Soft self-consistent pseudopotentials in a generalized eigenvalue formalism](../paper/10_1103_physrevb_41_7892.md)
+- 1991 — [Efficient pseudopotentials for plane-wave calculations](../paper/10_1103_physrevb_43_1993.md)
+- 1992 — [Atoms, molecules, solids, and surfaces: Applications of the generalized gradient approximation for exchange and correlation](../paper/10_1103_physrevb_46_6671.md)
+- 1992 — [Orbital angular momentum of light and the transformation of Laguerre-Gaussian laser modes](../paper/10_1103_physreva_45_8185.md)
+- 1993 — [Teleporting an unknown quantum state via dual classical and Einstein-Podolsky-Rosen channels](../paper/10_1103_physrevlett_70_1895.md)
+- 1994 — [Projector augmented-wave method](../paper/10_1103_physrevb_50_17953.md)
+- 1996 — [Generalized Gradient Approximation Made Simple](../paper/10_1103_physrevlett_77_3865.md)
+- 1998 — [Anti de Sitter space and holography](../paper/10_4310_atmp_1998_v2_n2_a2.md)
+- 1998 — [Observational Evidence from Supernovae for an Accelerating Universe and a Cosmological Constant](../paper/10_1086_300499.md)
+- 1998 — [The large $N$ limit of superconformal field theories and supergravity](../paper/10_4310_atmp_1998_v2_n2_a1.md)
+- 1998 — [Maps of Dust Infrared Emission for Use in Estimation of Reddening and Cosmic Microwave Background Radiation Foregrounds](../paper/10_1086_305772.md)
+- 1999 — [Measurements of Ω and Λ from 42 High‐Redshift Supernovae](../paper/10_1086_307221.md)
+- 2000 — [The Sloan Digital Sky Survey: Technical Summary](../paper/10_1086_301513.md)
+- 2003 — [Hybrid functionals based on a screened Coulomb potential](../paper/10_1063_1_1564060.md)
+- 2003 — [First‐Year <i>Wilkinson Microwave Anisotropy Probe</i> ( <i>WMAP</i> ) Observations: Determination of Cosmological Parameters](../paper/10_1086_377226.md)
+- 2005 — [Two-dimensional gas of massless Dirac fermions in graphene](../paper/10_1038_nature04233.md)
+- 2005 — [Experimental observation of the quantum Hall effect and Berry's phase in graphene](../paper/10_1038_nature04235.md)
+- 2006 — [The Two Micron All Sky Survey (2MASS)](../paper/10_1086_498708.md)
+- 2010 — [THE WIDE-FIELD INFRARED SURVEY EXPLORER (WISE): MISSION DESCRIPTION AND INITIAL ON-ORBIT PERFORMANCE](../paper/10_1088_0004_6256_140_6_1868.md)
+- 2010 — [Atomically Thin <mml:math xmlns:mml="http://www.w3.org/1998/Math/MathML" display="inline"> <mml:msub> <mml:mi>MoS</mml:mi> <mml:mn>2</mml:mn> </mml:msub> </mml:math> : A New Direct-Gap Semiconductor](../paper/10_1103_physrevlett_105_136805.md)
+- 2011 — [SEVEN-YEAR<i>WILKINSON MICROWAVE ANISOTROPY PROBE</i>(<i>WMAP</i>) OBSERVATIONS: COSMOLOGICAL INTERPRETATION](../paper/10_1088_0067_0049_192_2_18.md)
+- 2011 — [Light Propagation with Phase Discontinuities: Generalized Laws of Reflection and Refraction](../paper/10_1126_science_1210713.md)
+- 2012 — [Observation of a new particle in the search for the Standard Model Higgs boson with the ATLAS detector at the LHC](../paper/10_1016_j_physletb_2012_08_020.md)
+- 2012 — [Observation of a new boson at a mass of 125 GeV with the CMS experiment at the LHC](../paper/10_1016_j_physletb_2012_08_021.md)
+- 2014 — [The automated computation of tree-level and next-to-leading order differential cross sections, and their matching to parton shower simulations](../paper/10_1007_jhep07_2014_079.md)
+- 2014 — [<i>Planck</i>2013 results. XVI. Cosmological parameters](../paper/10_1051_0004_6361_201321591.md)
+- 2014 — [Flat optics with designer metasurfaces](../paper/10_1038_nmat3839.md)
+- 2016 — [The<i>Gaia</i>mission](../paper/10_1051_0004_6361_201629272.md)
+- 2016 — [Observation of Gravitational Waves from a Binary Black Hole Merger](../paper/10_1103_physrevlett_116_061102.md)
+- 2017 — [GW170817: Observation of Gravitational Waves from a Binary Neutron Star Inspiral](../paper/10_1103_physrevlett_119_161101.md)
+- 2018 — [Unconventional superconductivity in magic-angle graphene superlattices](../paper/10_1038_nature26160.md)
+- 2018 — [<i>Gaia</i> Data Release 2](../paper/10_1051_0004_6361_201833051.md)
+- 2020 — [<i>Planck</i> 2018 results](../paper/10_1051_0004_6361_201833910.md)

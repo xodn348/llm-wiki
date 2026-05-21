@@ -114,6 +114,20 @@ def obsidian() -> None:
 
 
 @app.command()
+def topic() -> None:
+    """11. Generate topic cluster pages from OpenAlex concepts."""
+    from . import topic_pages
+    topic_pages.generate_topics()
+
+
+@app.command()
+def lineage() -> None:
+    """12. Generate lineage chain pages from enables edges."""
+    from . import topic_pages
+    topic_pages.generate_lineages()
+
+
+@app.command()
 def all_(skip_llm: bool = False) -> None:  # noqa: PLR0913
     """Run the entire pipeline."""
     seed_assembler.assemble()
