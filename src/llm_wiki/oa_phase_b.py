@@ -30,17 +30,20 @@ logger = logging.getLogger(__name__)
 
 # Sci-Hub rotates domains as registrars take them down; try in order
 SCIHUB_HOSTS = (
-    "https://sci-hub.se",
+    "https://sci-hub.box",   # responds with citation_pdf_url meta tag
     "https://sci-hub.ru",
     "https://sci-hub.st",
-    "https://sci-hub.box",
+    "https://sci-hub.se",
 )
 
 # Anna's Archive SciDB is the persistent fallback; Cloudflare-gated
 ANNAS_BASE = "https://annas-archive.org/scidb"
 
-# PDF embed patterns Sci-Hub uses (varies by mirror version)
+# PDF discovery patterns Sci-Hub uses (varies by mirror version)
 PDF_EMBED_PATTERNS = [
+    # sci-hub.box / sci-hub.ru new-style: <meta name="citation_pdf_url" content="...">
+    re.compile(r'<meta[^>]+name=["\']citation_pdf_url["\'][^>]+content=["\']([^"\']+)["\']', re.I),
+    # legacy mirrors with <embed> / <iframe>
     re.compile(r'<embed[^>]+src="([^"#]+\.pdf[^"]*)"', re.I),
     re.compile(r'<iframe[^>]+src="([^"#]+\.pdf[^"]*)"', re.I),
     re.compile(r'location\.href\s*=\s*[\'"]([^\'"]+\.pdf[^\'"]*)', re.I),
@@ -122,7 +125,7 @@ def fetch_phase_b(
     sources: tuple[str, ...] = DEFAULT_ORDER,
     only_methods: tuple[str, ...] = (
         "oa_multi_miss", "oa_html", "oa_multi_html_only",
-        "phase_a_miss",
+        "phase_a_miss", "phase_c_miss",
     ),
 ) -> pl.DataFrame:
     status = pl.read_parquet(PATHS.raw / "fetch_status.parquet")
